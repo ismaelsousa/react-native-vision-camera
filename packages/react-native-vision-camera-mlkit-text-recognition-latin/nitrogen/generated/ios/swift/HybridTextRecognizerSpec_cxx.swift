@@ -172,6 +172,25 @@ open class HybridTextRecognizerSpec_cxx {
   }
   
   @inline(__always)
+  public final func recognizeTextInImage(image: bridge.std__shared_ptr_margelo__nitro__image__HybridImageSpec_) -> bridge.Result_std__shared_ptr_HybridRecognizedTextSpec__ {
+    do {
+      let __result = try self.__implementation.recognizeTextInImage(image: { () -> any HybridImageSpec in
+        let __unsafePointer = bridge.get_std__shared_ptr_margelo__nitro__image__HybridImageSpec_(image)
+        let __instance = HybridImageSpec_cxx.fromUnsafe(__unsafePointer)
+        return __instance.getHybridImageSpec()
+      }())
+      let __resultCpp = { () -> bridge.std__shared_ptr_HybridRecognizedTextSpec_ in
+        let __cxxWrapped = __result.getCxxWrapper()
+        return __cxxWrapped.getCxxPart()
+      }()
+      return bridge.create_Result_std__shared_ptr_HybridRecognizedTextSpec__(__resultCpp)
+    } catch (let __error) {
+      let __exceptionPtr = __error.toCpp()
+      return bridge.create_Result_std__shared_ptr_HybridRecognizedTextSpec__(__exceptionPtr)
+    }
+  }
+
+  @inline(__always)
   public final func recognizeTextInImageAsync(image: bridge.std__shared_ptr_margelo__nitro__image__HybridImageSpec_) -> bridge.Result_std__shared_ptr_Promise_std__shared_ptr_HybridRecognizedTextSpec____ {
     do {
       let __result = try self.__implementation.recognizeTextInImageAsync(image: { () -> any HybridImageSpec in

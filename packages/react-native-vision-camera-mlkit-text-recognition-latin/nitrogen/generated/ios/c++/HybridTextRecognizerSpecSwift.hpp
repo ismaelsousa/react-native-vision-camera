@@ -91,6 +91,14 @@ namespace margelo::nitro::camera::textrecognition {
       auto __value = std::move(__result.value());
       return __value;
     }
+    inline std::shared_ptr<HybridRecognizedTextSpec> recognizeTextInImage(const std::shared_ptr<margelo::nitro::image::HybridImageSpec>& image) override {
+      auto __result = _swiftPart.recognizeTextInImage(image);
+      if (__result.hasError()) [[unlikely]] {
+        std::rethrow_exception(__result.error());
+      }
+      auto __value = std::move(__result.value());
+      return __value;
+    }
     inline std::shared_ptr<Promise<std::shared_ptr<HybridRecognizedTextSpec>>> recognizeTextInImageAsync(const std::shared_ptr<margelo::nitro::image::HybridImageSpec>& image) override {
       auto __result = _swiftPart.recognizeTextInImageAsync(image);
       if (__result.hasError()) [[unlikely]] {

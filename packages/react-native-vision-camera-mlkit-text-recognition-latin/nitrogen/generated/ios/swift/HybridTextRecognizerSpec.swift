@@ -17,6 +17,7 @@ public protocol HybridTextRecognizerSpec_protocol: HybridObject {
   // Methods
   func recognizeText(frame: (any HybridFrameSpec)) throws -> (any HybridRecognizedTextSpec)
   func recognizeTextAsync(frame: (any HybridFrameSpec)) throws -> Promise<(any HybridRecognizedTextSpec)>
+  func recognizeTextInImage(image: (any HybridImageSpec)) throws -> (any HybridRecognizedTextSpec)
   func recognizeTextInImageAsync(image: (any HybridImageSpec)) throws -> Promise<(any HybridRecognizedTextSpec)>
 }
 

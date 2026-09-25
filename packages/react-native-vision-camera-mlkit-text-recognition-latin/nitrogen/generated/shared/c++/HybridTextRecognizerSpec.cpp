@@ -16,6 +16,7 @@ namespace margelo::nitro::camera::textrecognition {
     registerHybrids(this, [](Prototype& prototype) {
       prototype.registerHybridMethod("recognizeText", &HybridTextRecognizerSpec::recognizeText);
       prototype.registerHybridMethod("recognizeTextAsync", &HybridTextRecognizerSpec::recognizeTextAsync);
+      prototype.registerHybridMethod("recognizeTextInImage", &HybridTextRecognizerSpec::recognizeTextInImage);
       prototype.registerHybridMethod("recognizeTextInImageAsync", &HybridTextRecognizerSpec::recognizeTextInImageAsync);
     });
   }
