@@ -20,6 +20,9 @@ class HybridTextRecognizer : HybridTextRecognizerSpec() {
   override fun recognizeTextAsync(frame: HybridFrameSpec): Promise<HybridRecognizedTextSpec> =
     process(frame.toInputImage())
 
+  override fun recognizeTextInImage(image: HybridImageSpec): HybridRecognizedTextSpec =
+    HybridRecognizedText(Tasks.await(recognizer.process(image.toInputImage())))
+
   override fun recognizeTextInImageAsync(image: HybridImageSpec): Promise<HybridRecognizedTextSpec> =
     process(image.toInputImage())
 

@@ -42,6 +42,10 @@ abstract class HybridTextRecognizerSpec: HybridObject() {
   
   @DoNotStrip
   @Keep
+  abstract fun recognizeTextInImage(image: com.margelo.nitro.image.HybridImageSpec): HybridRecognizedTextSpec
+
+  @DoNotStrip
+  @Keep
   abstract fun recognizeTextInImageAsync(image: com.margelo.nitro.image.HybridImageSpec): Promise<HybridRecognizedTextSpec>
 
   // Default implementation of `HybridObject.toString()`

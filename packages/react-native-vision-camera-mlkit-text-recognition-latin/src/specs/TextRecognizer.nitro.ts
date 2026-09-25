@@ -10,6 +10,8 @@ export interface TextRecognizer
   recognizeText(frame: Frame): RecognizedText
   /** Asynchronously recognizes text in a camera Frame. */
   recognizeTextAsync(frame: Frame): Promise<RecognizedText>
+  /** Synchronously recognizes text in a Nitro Image. */
+  recognizeTextInImage(image: Image): RecognizedText
   /** Asynchronously recognizes text in a Nitro Image. */
   recognizeTextInImageAsync(image: Image): Promise<RecognizedText>
 }

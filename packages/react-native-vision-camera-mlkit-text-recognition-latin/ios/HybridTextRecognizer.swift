@@ -16,6 +16,10 @@ final class HybridTextRecognizer: HybridTextRecognizerSpec {
     return process(try frame.toMLImage())
   }
 
+  func recognizeTextInImage(image: any HybridImageSpec) throws -> any HybridRecognizedTextSpec {
+    return HybridRecognizedText(result: try recognizer.results(in: image.toMLImage()))
+  }
+
   func recognizeTextInImageAsync(image: any HybridImageSpec) throws -> Promise<any HybridRecognizedTextSpec> {
     return process(try image.toMLImage())
   }

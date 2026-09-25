@@ -78,6 +78,11 @@ namespace margelo::nitro::camera::textrecognition {
       return __promise;
     }();
   }
+  std::shared_ptr<HybridRecognizedTextSpec> JHybridTextRecognizerSpec::recognizeTextInImage(const std::shared_ptr<margelo::nitro::image::HybridImageSpec>& image) {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JHybridRecognizedTextSpec::JavaPart>(jni::alias_ref<margelo::nitro::image::JHybridImageSpec::JavaPart> /* image */)>("recognizeTextInImage");
+    auto __result = method(_javaPart, std::dynamic_pointer_cast<margelo::nitro::image::JHybridImageSpec>(image)->getJavaPart());
+    return __result->getJHybridRecognizedTextSpec();
+  }
   std::shared_ptr<Promise<std::shared_ptr<HybridRecognizedTextSpec>>> JHybridTextRecognizerSpec::recognizeTextInImageAsync(const std::shared_ptr<margelo::nitro::image::HybridImageSpec>& image) {
     static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPromise::javaobject>(jni::alias_ref<margelo::nitro::image::JHybridImageSpec::JavaPart> /* image */)>("recognizeTextInImageAsync");
     auto __result = method(_javaPart, std::dynamic_pointer_cast<margelo::nitro::image::JHybridImageSpec>(image)->getJavaPart());

@@ -59,6 +59,7 @@ namespace margelo::nitro::camera::textrecognition {
       // Methods
       virtual std::shared_ptr<HybridRecognizedTextSpec> recognizeText(const std::shared_ptr<margelo::nitro::camera::HybridFrameSpec>& frame) = 0;
       virtual std::shared_ptr<Promise<std::shared_ptr<HybridRecognizedTextSpec>>> recognizeTextAsync(const std::shared_ptr<margelo::nitro::camera::HybridFrameSpec>& frame) = 0;
+      virtual std::shared_ptr<HybridRecognizedTextSpec> recognizeTextInImage(const std::shared_ptr<margelo::nitro::image::HybridImageSpec>& image) = 0;
       virtual std::shared_ptr<Promise<std::shared_ptr<HybridRecognizedTextSpec>>> recognizeTextInImageAsync(const std::shared_ptr<margelo::nitro::image::HybridImageSpec>& image) = 0;
 
     protected:
