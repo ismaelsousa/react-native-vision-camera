@@ -28,10 +28,10 @@ namespace margelo::nitro::camera::textrecognition { class HybridTextRecognizerFa
 namespace margelo::nitro::camera::textrecognition { class HybridTextRecognizerSpec; }
 // Forward declaration of `HybridTextSymbolSpec` to properly resolve imports.
 namespace margelo::nitro::camera::textrecognition { class HybridTextSymbolSpec; }
-// Forward declaration of `Point` to properly resolve imports.
-namespace margelo::nitro::camera::textrecognition { struct Point; }
-// Forward declaration of `Rect` to properly resolve imports.
-namespace margelo::nitro::camera::textrecognition { struct Rect; }
+// Forward declaration of `TextPoint` to properly resolve imports.
+namespace margelo::nitro::camera::textrecognition { struct TextPoint; }
+// Forward declaration of `TextRect` to properly resolve imports.
+namespace margelo::nitro::camera::textrecognition { struct TextRect; }
 
 // Forward declarations of Swift defined types
 // Forward declaration of `HybridFrameSpec_cxx` to properly resolve imports.
@@ -64,8 +64,8 @@ namespace VisionCameraTextRecognitionLatin { class HybridTextSymbolSpec_cxx; }
 #include "HybridTextRecognizerFactorySpec.hpp"
 #include "HybridTextRecognizerSpec.hpp"
 #include "HybridTextSymbolSpec.hpp"
-#include "Point.hpp"
-#include "Rect.hpp"
+#include "TextPoint.hpp"
+#include "TextRect.hpp"
 #include <NitroImage/HybridImageSpec.hpp>
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/PromiseHolder.hpp>
@@ -169,28 +169,28 @@ namespace margelo::nitro::camera::textrecognition::bridge::swift {
     return vector;
   }
   
-  // pragma MARK: std::optional<Rect>
+  // pragma MARK: std::optional<TextRect>
   /**
-   * Specialized version of `std::optional<Rect>`.
+   * Specialized version of `std::optional<TextRect>`.
    */
-  using std__optional_Rect_ = std::optional<Rect>;
-  inline std::optional<Rect> create_std__optional_Rect_(const Rect& value) noexcept {
-    return std::optional<Rect>(value);
+  using std__optional_TextRect_ = std::optional<TextRect>;
+  inline std::optional<TextRect> create_std__optional_TextRect_(const TextRect& value) noexcept {
+    return std::optional<TextRect>(value);
   }
-  inline bool has_value_std__optional_Rect_(const std::optional<Rect>& optional) noexcept {
+  inline bool has_value_std__optional_TextRect_(const std::optional<TextRect>& optional) noexcept {
     return optional.has_value();
   }
-  inline Rect get_std__optional_Rect_(const std::optional<Rect>& optional) noexcept {
+  inline TextRect get_std__optional_TextRect_(const std::optional<TextRect>& optional) noexcept {
     return optional.value();
   }
   
-  // pragma MARK: std::vector<Point>
+  // pragma MARK: std::vector<TextPoint>
   /**
-   * Specialized version of `std::vector<Point>`.
+   * Specialized version of `std::vector<TextPoint>`.
    */
-  using std__vector_Point_ = std::vector<Point>;
-  inline std::vector<Point> create_std__vector_Point_(size_t size) noexcept {
-    std::vector<Point> vector;
+  using std__vector_TextPoint_ = std::vector<TextPoint>;
+  inline std::vector<TextPoint> create_std__vector_TextPoint_(size_t size) noexcept {
+    std::vector<TextPoint> vector;
     vector.reserve(size);
     return vector;
   }

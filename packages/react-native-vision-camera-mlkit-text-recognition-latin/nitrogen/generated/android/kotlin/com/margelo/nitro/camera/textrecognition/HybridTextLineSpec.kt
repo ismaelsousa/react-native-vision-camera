@@ -36,11 +36,11 @@ abstract class HybridTextLineSpec: HybridObject() {
   
   @get:DoNotStrip
   @get:Keep
-  abstract val boundingBox: Rect?
+  abstract val boundingBox: TextRect?
   
   @get:DoNotStrip
   @get:Keep
-  abstract val cornerPoints: Array<Point>
+  abstract val cornerPoints: Array<TextPoint>
   
   @get:DoNotStrip
   @get:Keep

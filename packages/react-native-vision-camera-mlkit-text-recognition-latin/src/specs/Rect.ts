@@ -1,6 +1,6 @@
-export interface Rect {
-  left: number
-  right: number
-  top: number
-  bottom: number
+export interface TextRect {
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
 }

@@ -7,22 +7,22 @@
 
 #include "JHybridTextElementSpec.hpp"
 
-// Forward declaration of `Rect` to properly resolve imports.
-namespace margelo::nitro::camera::textrecognition { struct Rect; }
-// Forward declaration of `Point` to properly resolve imports.
-namespace margelo::nitro::camera::textrecognition { struct Point; }
+// Forward declaration of `TextRect` to properly resolve imports.
+namespace margelo::nitro::camera::textrecognition { struct TextRect; }
+// Forward declaration of `TextPoint` to properly resolve imports.
+namespace margelo::nitro::camera::textrecognition { struct TextPoint; }
 // Forward declaration of `HybridRecognizedLanguageSpec` to properly resolve imports.
 namespace margelo::nitro::camera::textrecognition { class HybridRecognizedLanguageSpec; }
 // Forward declaration of `HybridTextSymbolSpec` to properly resolve imports.
 namespace margelo::nitro::camera::textrecognition { class HybridTextSymbolSpec; }
 
 #include <string>
-#include "Rect.hpp"
+#include "TextRect.hpp"
 #include <optional>
-#include "JRect.hpp"
-#include "Point.hpp"
+#include "JTextRect.hpp"
+#include "TextPoint.hpp"
 #include <vector>
-#include "JPoint.hpp"
+#include "JTextPoint.hpp"
 #include <memory>
 #include "HybridRecognizedLanguageSpec.hpp"
 #include "JHybridRecognizedLanguageSpec.hpp"
@@ -64,17 +64,17 @@ namespace margelo::nitro::camera::textrecognition {
     auto __result = method(_javaPart);
     return __result->toStdString();
   }
-  std::optional<Rect> JHybridTextElementSpec::getBoundingBox() {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JRect>()>("getBoundingBox");
+  std::optional<TextRect> JHybridTextElementSpec::getBoundingBox() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JTextRect>()>("getBoundingBox");
     auto __result = method(_javaPart);
     return __result != nullptr ? std::make_optional(__result->toCpp()) : std::nullopt;
   }
-  std::vector<Point> JHybridTextElementSpec::getCornerPoints() {
-    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<jni::JArrayClass<JPoint>>()>("getCornerPoints");
+  std::vector<TextPoint> JHybridTextElementSpec::getCornerPoints() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<jni::JArrayClass<JTextPoint>>()>("getCornerPoints");
     auto __result = method(_javaPart);
     return [&](auto&& __input) {
       size_t __size = __input->size();
-      std::vector<Point> __vector;
+      std::vector<TextPoint> __vector;
       __vector.reserve(__size);
       for (size_t __i = 0; __i < __size; __i++) {
         auto __element = __input->getElement(__i);

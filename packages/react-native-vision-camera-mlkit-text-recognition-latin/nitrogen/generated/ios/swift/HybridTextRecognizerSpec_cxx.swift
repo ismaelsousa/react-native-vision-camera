@@ -189,7 +189,7 @@ open class HybridTextRecognizerSpec_cxx {
       return bridge.create_Result_std__shared_ptr_HybridRecognizedTextSpec__(__exceptionPtr)
     }
   }
-
+  
   @inline(__always)
   public final func recognizeTextInImageAsync(image: bridge.std__shared_ptr_margelo__nitro__image__HybridImageSpec_) -> bridge.Result_std__shared_ptr_Promise_std__shared_ptr_HybridRecognizedTextSpec____ {
     do {

@@ -51,8 +51,8 @@ namespace margelo::nitro::camera::textrecognition {
   public:
     // Properties
     std::string getText() override;
-    std::optional<Rect> getBoundingBox() override;
-    std::vector<Point> getCornerPoints() override;
+    std::optional<TextRect> getBoundingBox() override;
+    std::vector<TextPoint> getCornerPoints() override;
     std::vector<std::shared_ptr<HybridRecognizedLanguageSpec>> getRecognizedLanguages() override;
     std::optional<double> getConfidence() override;
     std::optional<double> getAngle() override;

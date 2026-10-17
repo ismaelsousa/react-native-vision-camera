@@ -14,10 +14,10 @@ namespace VisionCameraTextRecognitionLatin { class HybridTextBlockSpec_cxx; }
 
 // Forward declaration of `HybridTextLineSpec` to properly resolve imports.
 namespace margelo::nitro::camera::textrecognition { class HybridTextLineSpec; }
-// Forward declaration of `Rect` to properly resolve imports.
-namespace margelo::nitro::camera::textrecognition { struct Rect; }
-// Forward declaration of `Point` to properly resolve imports.
-namespace margelo::nitro::camera::textrecognition { struct Point; }
+// Forward declaration of `TextRect` to properly resolve imports.
+namespace margelo::nitro::camera::textrecognition { struct TextRect; }
+// Forward declaration of `TextPoint` to properly resolve imports.
+namespace margelo::nitro::camera::textrecognition { struct TextPoint; }
 // Forward declaration of `HybridRecognizedLanguageSpec` to properly resolve imports.
 namespace margelo::nitro::camera::textrecognition { class HybridRecognizedLanguageSpec; }
 
@@ -25,9 +25,9 @@ namespace margelo::nitro::camera::textrecognition { class HybridRecognizedLangua
 #include <memory>
 #include "HybridTextLineSpec.hpp"
 #include <vector>
-#include "Rect.hpp"
+#include "TextRect.hpp"
 #include <optional>
-#include "Point.hpp"
+#include "TextPoint.hpp"
 #include "HybridRecognizedLanguageSpec.hpp"
 
 #include "VisionCameraTextRecognitionLatin-Swift-Cxx-Umbrella.hpp"
@@ -84,11 +84,11 @@ namespace margelo::nitro::camera::textrecognition {
       auto __result = _swiftPart.getLines();
       return __result;
     }
-    inline std::optional<Rect> getBoundingBox() noexcept override {
+    inline std::optional<TextRect> getBoundingBox() noexcept override {
       auto __result = _swiftPart.getBoundingBox();
       return __result;
     }
-    inline std::vector<Point> getCornerPoints() noexcept override {
+    inline std::vector<TextPoint> getCornerPoints() noexcept override {
       auto __result = _swiftPart.getCornerPoints();
       return __result;
     }

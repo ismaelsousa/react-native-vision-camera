@@ -15,10 +15,10 @@
 
 // Forward declaration of `HybridTextLineSpec` to properly resolve imports.
 namespace margelo::nitro::camera::textrecognition { class HybridTextLineSpec; }
-// Forward declaration of `Rect` to properly resolve imports.
-namespace margelo::nitro::camera::textrecognition { struct Rect; }
-// Forward declaration of `Point` to properly resolve imports.
-namespace margelo::nitro::camera::textrecognition { struct Point; }
+// Forward declaration of `TextRect` to properly resolve imports.
+namespace margelo::nitro::camera::textrecognition { struct TextRect; }
+// Forward declaration of `TextPoint` to properly resolve imports.
+namespace margelo::nitro::camera::textrecognition { struct TextPoint; }
 // Forward declaration of `HybridRecognizedLanguageSpec` to properly resolve imports.
 namespace margelo::nitro::camera::textrecognition { class HybridRecognizedLanguageSpec; }
 
@@ -26,9 +26,9 @@ namespace margelo::nitro::camera::textrecognition { class HybridRecognizedLangua
 #include <memory>
 #include "HybridTextLineSpec.hpp"
 #include <vector>
-#include "Rect.hpp"
+#include "TextRect.hpp"
 #include <optional>
-#include "Point.hpp"
+#include "TextPoint.hpp"
 #include "HybridRecognizedLanguageSpec.hpp"
 
 namespace margelo::nitro::camera::textrecognition {
@@ -60,8 +60,8 @@ namespace margelo::nitro::camera::textrecognition {
       // Properties
       virtual std::string getText() = 0;
       virtual std::vector<std::shared_ptr<HybridTextLineSpec>> getLines() = 0;
-      virtual std::optional<Rect> getBoundingBox() = 0;
-      virtual std::vector<Point> getCornerPoints() = 0;
+      virtual std::optional<TextRect> getBoundingBox() = 0;
+      virtual std::vector<TextPoint> getCornerPoints() = 0;
       virtual std::vector<std::shared_ptr<HybridRecognizedLanguageSpec>> getRecognizedLanguages() = 0;
 
     public:

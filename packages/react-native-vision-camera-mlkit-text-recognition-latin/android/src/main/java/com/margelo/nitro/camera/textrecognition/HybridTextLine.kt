@@ -8,8 +8,8 @@ class HybridTextLine(private val line: Text.Line) : HybridTextLineSpec() {
   override val text: String get() = line.text
   override val elements: Array<HybridTextElementSpec>
     get() = line.elements.map { HybridTextElement(it) }.toTypedArray<HybridTextElementSpec>()
-  override val boundingBox: Rect? get() = line.boundingBox.toNitroRect()
-  override val cornerPoints: Array<Point> get() = line.cornerPoints.toNitroPoints()
+  override val boundingBox: TextRect? get() = line.boundingBox.toNitroRect()
+  override val cornerPoints: Array<TextPoint> get() = line.cornerPoints.toNitroPoints()
   override val recognizedLanguages: Array<HybridRecognizedLanguageSpec>
     get() = arrayOf(HybridRecognizedLanguage(line.recognizedLanguage))
   override val confidence: Double get() = line.confidence.toDouble()

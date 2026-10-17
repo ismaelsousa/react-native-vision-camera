@@ -11,8 +11,8 @@ import NitroModules
 public protocol HybridTextElementSpec_protocol: HybridObject {
   // Properties
   var text: String { get }
-  var boundingBox: Rect? { get }
-  var cornerPoints: [Point] { get }
+  var boundingBox: TextRect? { get }
+  var cornerPoints: [TextPoint] { get }
   var recognizedLanguages: [(any HybridRecognizedLanguageSpec)] { get }
   var symbols: [(any HybridTextSymbolSpec)] { get }
   var confidence: Double? { get }

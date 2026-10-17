@@ -1,16 +1,16 @@
 import CoreGraphics
 
 extension CGRect {
-  var toNitroRect: Rect {
-    return Rect(left: minX, right: maxX, top: minY, bottom: maxY)
+  var toNitroRect: TextRect {
+    return TextRect(left: minX, right: maxX, top: minY, bottom: maxY)
   }
 }
 
 extension Array where Element == NSValue {
-  var toNitroPoints: [Point] {
+  var toNitroPoints: [TextPoint] {
     return map { value in
       let point = value.cgPointValue
-      return Point(x: point.x, y: point.y)
+      return TextPoint(x: point.x, y: point.y)
     }
   }
 }

@@ -9,8 +9,8 @@ final class HybridTextElement: HybridTextElementSpec {
   }
 
   var text: String { element.text }
-  var boundingBox: Rect? { element.frame.toNitroRect }
-  var cornerPoints: [Point] { element.cornerPoints.toNitroPoints }
+  var boundingBox: TextRect? { element.frame.toNitroRect }
+  var cornerPoints: [TextPoint] { element.cornerPoints.toNitroPoints }
   var recognizedLanguages: [any HybridRecognizedLanguageSpec] {
     element.recognizedLanguages.map { HybridRecognizedLanguage(language: $0) }
   }

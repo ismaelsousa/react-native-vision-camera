@@ -12,8 +12,8 @@ final class HybridTextLine: HybridTextLineSpec {
   var elements: [any HybridTextElementSpec] {
     line.elements.map { HybridTextElement(element: $0) }
   }
-  var boundingBox: Rect? { line.frame.toNitroRect }
-  var cornerPoints: [Point] { line.cornerPoints.toNitroPoints }
+  var boundingBox: TextRect? { line.frame.toNitroRect }
+  var cornerPoints: [TextPoint] { line.cornerPoints.toNitroPoints }
   var recognizedLanguages: [any HybridRecognizedLanguageSpec] {
     line.recognizedLanguages.map { HybridRecognizedLanguage(language: $0) }
   }

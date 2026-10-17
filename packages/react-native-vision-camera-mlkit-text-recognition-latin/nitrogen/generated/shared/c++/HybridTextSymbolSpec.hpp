@@ -13,17 +13,17 @@
 #error NitroModules cannot be found! Are you sure you installed NitroModules properly?
 #endif
 
-// Forward declaration of `Rect` to properly resolve imports.
-namespace margelo::nitro::camera::textrecognition { struct Rect; }
-// Forward declaration of `Point` to properly resolve imports.
-namespace margelo::nitro::camera::textrecognition { struct Point; }
+// Forward declaration of `TextRect` to properly resolve imports.
+namespace margelo::nitro::camera::textrecognition { struct TextRect; }
+// Forward declaration of `TextPoint` to properly resolve imports.
+namespace margelo::nitro::camera::textrecognition { struct TextPoint; }
 // Forward declaration of `HybridRecognizedLanguageSpec` to properly resolve imports.
 namespace margelo::nitro::camera::textrecognition { class HybridRecognizedLanguageSpec; }
 
 #include <string>
-#include "Rect.hpp"
+#include "TextRect.hpp"
 #include <optional>
-#include "Point.hpp"
+#include "TextPoint.hpp"
 #include <vector>
 #include <memory>
 #include "HybridRecognizedLanguageSpec.hpp"
@@ -56,8 +56,8 @@ namespace margelo::nitro::camera::textrecognition {
     public:
       // Properties
       virtual std::string getText() = 0;
-      virtual std::optional<Rect> getBoundingBox() = 0;
-      virtual std::vector<Point> getCornerPoints() = 0;
+      virtual std::optional<TextRect> getBoundingBox() = 0;
+      virtual std::vector<TextPoint> getCornerPoints() = 0;
       virtual std::vector<std::shared_ptr<HybridRecognizedLanguageSpec>> getRecognizedLanguages() = 0;
       virtual std::optional<double> getConfidence() = 0;
       virtual std::optional<double> getAngle() = 0;

@@ -6,8 +6,8 @@ import com.margelo.nitro.camera.textrecognition.extensions.toNitroRect
 
 class HybridTextSymbol(private val symbol: Text.Symbol) : HybridTextSymbolSpec() {
   override val text: String get() = symbol.text
-  override val boundingBox: Rect? get() = symbol.boundingBox.toNitroRect()
-  override val cornerPoints: Array<Point> get() = symbol.cornerPoints.toNitroPoints()
+  override val boundingBox: TextRect? get() = symbol.boundingBox.toNitroRect()
+  override val cornerPoints: Array<TextPoint> get() = symbol.cornerPoints.toNitroPoints()
   override val recognizedLanguages: Array<HybridRecognizedLanguageSpec>
     get() = arrayOf(HybridRecognizedLanguage(symbol.recognizedLanguage))
   override val confidence: Double get() = symbol.confidence.toDouble()

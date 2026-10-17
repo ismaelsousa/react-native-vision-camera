@@ -28,10 +28,10 @@ namespace margelo::nitro::camera::textrecognition { class HybridTextRecognizerFa
 namespace margelo::nitro::camera::textrecognition { class HybridTextRecognizerSpec; }
 // Forward declaration of `HybridTextSymbolSpec` to properly resolve imports.
 namespace margelo::nitro::camera::textrecognition { class HybridTextSymbolSpec; }
-// Forward declaration of `Point` to properly resolve imports.
-namespace margelo::nitro::camera::textrecognition { struct Point; }
-// Forward declaration of `Rect` to properly resolve imports.
-namespace margelo::nitro::camera::textrecognition { struct Rect; }
+// Forward declaration of `TextPoint` to properly resolve imports.
+namespace margelo::nitro::camera::textrecognition { struct TextPoint; }
+// Forward declaration of `TextRect` to properly resolve imports.
+namespace margelo::nitro::camera::textrecognition { struct TextRect; }
 
 // Include C++ defined types
 #include "HybridRecognizedLanguageSpec.hpp"
@@ -42,8 +42,8 @@ namespace margelo::nitro::camera::textrecognition { struct Rect; }
 #include "HybridTextRecognizerFactorySpec.hpp"
 #include "HybridTextRecognizerSpec.hpp"
 #include "HybridTextSymbolSpec.hpp"
-#include "Point.hpp"
-#include "Rect.hpp"
+#include "TextPoint.hpp"
+#include "TextRect.hpp"
 #include <NitroImage/HybridImageSpec.hpp>
 #include <NitroModules/Promise.hpp>
 #include <NitroModules/Result.hpp>

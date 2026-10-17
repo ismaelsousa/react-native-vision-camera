@@ -128,12 +128,12 @@ open class HybridTextSymbolSpec_cxx {
     }
   }
   
-  public final var boundingBox: bridge.std__optional_Rect_ {
+  public final var boundingBox: bridge.std__optional_TextRect_ {
     @inline(__always)
     get {
-      return { () -> bridge.std__optional_Rect_ in
+      return { () -> bridge.std__optional_TextRect_ in
         if let __unwrappedValue = self.__implementation.boundingBox {
-          return bridge.create_std__optional_Rect_(__unwrappedValue)
+          return bridge.create_std__optional_TextRect_(__unwrappedValue)
         } else {
           return .init()
         }
@@ -141,11 +141,11 @@ open class HybridTextSymbolSpec_cxx {
     }
   }
   
-  public final var cornerPoints: bridge.std__vector_Point_ {
+  public final var cornerPoints: bridge.std__vector_TextPoint_ {
     @inline(__always)
     get {
-      return { () -> bridge.std__vector_Point_ in
-        var __vector = bridge.create_std__vector_Point_(self.__implementation.cornerPoints.count)
+      return { () -> bridge.std__vector_TextPoint_ in
+        var __vector = bridge.create_std__vector_TextPoint_(self.__implementation.cornerPoints.count)
         for __item in self.__implementation.cornerPoints {
           __vector.push_back(__item)
         }
