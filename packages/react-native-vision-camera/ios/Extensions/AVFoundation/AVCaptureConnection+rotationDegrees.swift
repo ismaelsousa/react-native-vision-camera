@@ -8,7 +8,7 @@ import AVFoundation
 import Foundation
 
 extension AVCaptureConnection {
-  var rotationDegrees: Double? {
+  public var rotationDegrees: Double? {
     if #available(iOS 17.0, *) {
       return videoRotationAngle
     }
