@@ -10,6 +10,7 @@ import com.margelo.nitro.camera.TargetStabilizationMode
 import com.margelo.nitro.camera.extensions.converters.fromMirrorMode
 import com.margelo.nitro.camera.extensions.converters.toMirrorMode
 import com.margelo.nitro.camera.extensions.converters.toSize
+import com.margelo.nitro.camera.extensions.surfaceRotation
 import com.margelo.nitro.camera.public.NativeCameraOutput
 import com.margelo.nitro.camera.public.NativePreviewOutput
 
@@ -18,11 +19,10 @@ class HybridPreviewOutput :
   NativeCameraOutput,
   NativePreviewOutput {
   override val mediaType: MediaType = MediaType.VIDEO
-  override var outputOrientation: CameraOrientation
-    get() = CameraOrientation.UP
-    set(_) {
-      // Setting orientation in a Preview output does nothing.
-      // It is controlled by the PreviewView.
+  override var outputOrientation: CameraOrientation = CameraOrientation.UP
+    set(value) {
+      field = value
+      preview?.targetRotation = value.surfaceRotation
     }
   override val mirrorMode: MirrorMode
     get() {
@@ -57,6 +57,9 @@ class HybridPreviewOutput :
       Preview
         .Builder()
         .apply {
+          // CameraOrientation
+          setTargetRotation(outputOrientation.surfaceRotation)
+
           // isMirrored={...}
           setMirrorMode(mirrorMode.toMirrorMode())
 
