@@ -25,6 +25,10 @@ final class HybridCameraPreviewOutput: HybridCameraPreviewOutputSpec, NativePrev
     guard let connection = previewLayer.connection else { return nil }
     return connection.inputStreamResolution
   }
+  var rotationDegrees: Double? {
+    guard let connection = previewLayer.connection else { return nil }
+    return connection.rotationDegrees
+  }
 
   var streamType: StreamType = .video
   /// The Preview can never display more pixels than the screen has,

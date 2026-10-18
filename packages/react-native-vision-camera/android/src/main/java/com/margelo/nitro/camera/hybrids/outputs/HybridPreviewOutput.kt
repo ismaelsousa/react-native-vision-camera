@@ -31,6 +31,8 @@ class HybridPreviewOutput :
     }
   override val currentResolution: Size?
     get() = preview?.resolutionInfo?.resolution?.toSize()
+  override val rotationDegrees: Double?
+    get() = preview?.resolutionInfo?.rotationDegrees?.toDouble()
 
   private var preview: Preview? = null
   private var surfaceProvider: Preview.SurfaceProvider? = null
