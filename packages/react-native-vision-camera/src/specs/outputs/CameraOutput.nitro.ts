@@ -48,6 +48,9 @@ export interface CameraOutput
    * This is one of `0`, `90`, `180`, or `270`, or `undefined` if the
    * output has not yet been connected to a {@linkcode CameraSession}
    * or the platform cannot report the rotation.
+   *
+   * On iOS, this is only available on iOS 17.0 and later and returns
+   * `undefined` on earlier versions.
    */
   readonly rotationDegrees?: number
   /**
