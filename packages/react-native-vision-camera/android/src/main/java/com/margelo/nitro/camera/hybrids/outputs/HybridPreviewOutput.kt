@@ -11,6 +11,7 @@ import com.margelo.nitro.camera.extensions.converters.fromMirrorMode
 import com.margelo.nitro.camera.extensions.converters.toMirrorMode
 import com.margelo.nitro.camera.extensions.converters.toSize
 import com.margelo.nitro.camera.extensions.surfaceRotation
+import com.margelo.nitro.camera.hybrids.orientation.HybridInterfaceOrientationManager
 import com.margelo.nitro.camera.public.NativeCameraOutput
 import com.margelo.nitro.camera.public.NativePreviewOutput
 
@@ -18,11 +19,14 @@ class HybridPreviewOutput :
   HybridCameraPreviewOutputSpec(),
   NativeCameraOutput,
   NativePreviewOutput {
+  private val orientationManager = HybridInterfaceOrientationManager()
+
   override val mediaType: MediaType = MediaType.VIDEO
-  override var outputOrientation: CameraOrientation = CameraOrientation.UP
+  override var outputOrientation: CameraOrientation
+    get() = orientationManager.currentOrientation ?: CameraOrientation.UP
     set(value) {
-      field = value
-      preview?.targetRotation = value.surfaceRotation
+      // Setting orientation on a Preview output does nothing,
+      // as its orientation is always driven by the `orientationManager`.
     }
   override val mirrorMode: MirrorMode
     get() {
@@ -33,9 +37,14 @@ class HybridPreviewOutput :
     get() = preview?.resolutionInfo?.resolution?.toSize()
   override val rotationDegrees: Double?
     get() = preview?.resolutionInfo?.rotationDegrees?.toDouble()
-
   private var preview: Preview? = null
   private var surfaceProvider: Preview.SurfaceProvider? = null
+
+  init {
+    orientationManager.startOrientationUpdates { orientation ->
+      preview?.targetRotation = orientation.surfaceRotation
+    }
+  }
 
   override fun setSurfaceProvider(surfaceProvider: Preview.SurfaceProvider) {
     this.surfaceProvider = surfaceProvider
@@ -81,7 +90,15 @@ class HybridPreviewOutput :
 
     return NativeCameraOutput.PreparedUseCase(preview) {
       this.preview = preview
+      orientationManager.currentOrientation?.let { orientation ->
+        this.preview?.targetRotation = orientation.surfaceRotation
+      }
       this.preview?.surfaceProvider = surfaceProvider
     }
+  }
+
+  override fun dispose() {
+    super.dispose()
+    orientationManager.stopOrientationUpdates()
   }
 }
