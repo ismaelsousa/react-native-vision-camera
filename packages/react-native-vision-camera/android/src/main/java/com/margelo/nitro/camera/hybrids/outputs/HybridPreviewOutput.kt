@@ -1,5 +1,6 @@
 package com.margelo.nitro.camera.hybrids.outputs
 
+import android.util.Log
 import androidx.camera.core.Preview
 import com.margelo.nitro.camera.CameraOrientation
 import com.margelo.nitro.camera.HybridCameraPreviewOutputSpec
@@ -40,14 +41,18 @@ class HybridPreviewOutput :
   private var preview: Preview? = null
   private var surfaceProvider: Preview.SurfaceProvider? = null
 
-  init {
+  private fun startOrientationUpdates() {
     orientationManager.startOrientationUpdates { orientation ->
-      preview?.targetRotation = orientation.surfaceRotation
+      preview?.let { preview ->
+        preview.targetRotation = orientation.surfaceRotation
+        logPreviewConfiguration(preview, "interface orientation changed")
+      }
     }
   }
 
   override fun setSurfaceProvider(surfaceProvider: Preview.SurfaceProvider) {
     this.surfaceProvider = surfaceProvider
+    startOrientationUpdates()
     preview?.surfaceProvider = surfaceProvider
   }
 
@@ -55,6 +60,7 @@ class HybridPreviewOutput :
     if (this.surfaceProvider == surfaceProvider) {
       this.surfaceProvider = null
       preview?.surfaceProvider = null
+      orientationManager.stopOrientationUpdates()
     }
   }
 
@@ -66,9 +72,6 @@ class HybridPreviewOutput :
       Preview
         .Builder()
         .apply {
-          // CameraOrientation
-          setTargetRotation(outputOrientation.surfaceRotation)
-
           // isMirrored={...}
           setMirrorMode(mirrorMode.toMirrorMode())
 
@@ -94,7 +97,19 @@ class HybridPreviewOutput :
         this.preview?.targetRotation = orientation.surfaceRotation
       }
       this.preview?.surfaceProvider = surfaceProvider
+      logPreviewConfiguration(preview, "use case attached")
     }
+  }
+
+  private fun logPreviewConfiguration(
+    preview: Preview,
+    source: String,
+  ) {
+    val resolutionInfo = preview.resolutionInfo ?: return
+    Log.i(
+      TAG,
+      "Preview configuration changed ($source): ${resolutionInfo.resolution.width}x${resolutionInfo.resolution.height} @ ${resolutionInfo.rotationDegrees}°",
+    )
   }
 
   override fun dispose() {
