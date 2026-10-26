@@ -20,8 +20,7 @@ import com.margelo.nitro.camera.public.NativePreviewOutput
 
 class HybridPreviewOutput(
   private val options: PreviewOutputOptions,
-) :
-  HybridCameraPreviewOutputSpec(),
+) : HybridCameraPreviewOutputSpec(),
   NativeCameraOutput,
   NativePreviewOutput {
   private val orientationManager = HybridInterfaceOrientationManager()
