@@ -11,6 +11,7 @@ import type {
   MeteringMode,
 } from '../specs/common-types/FocusOptions'
 import type { Point } from '../specs/common-types/Point'
+import type { PreviewConfiguration } from '../specs/outputs/CameraPreviewOutput.nitro'
 import type {
   PreviewView,
   PreviewViewMethods,
@@ -86,6 +87,10 @@ export interface CameraViewProps
    * stopped streaming Frames.
    */
   onPreviewStopped?: () => void
+  /**
+   * Called whenever the Preview's resolution or rotation changes.
+   */
+  onPreviewConfigurationChanged?: (configuration: PreviewConfiguration) => void
 
   // Native gestures
   /**
@@ -114,6 +119,7 @@ function CameraImpl({
   resizeMode,
   onPreviewStarted,
   onPreviewStopped,
+  onPreviewConfigurationChanged,
   outputs = [],
   enableNativeZoomGesture = false,
   enableNativeTapToFocusGesture = false,
@@ -121,7 +127,9 @@ function CameraImpl({
   ...props
 }: CameraViewProps): React.ReactElement {
   // 1. Create `PreviewOutput` for the Camera
-  const previewOutput = usePreviewOutput()
+  const previewOutput = usePreviewOutput({
+    onConfigurationChanged: onPreviewConfigurationChanged,
+  })
 
   // 3. Create session/controller and add the preview output
   const controller = useCamera({
