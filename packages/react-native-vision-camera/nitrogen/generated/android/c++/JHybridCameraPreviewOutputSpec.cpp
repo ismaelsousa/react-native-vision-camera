@@ -7,20 +7,24 @@
 
 #include "JHybridCameraPreviewOutputSpec.hpp"
 
+// Forward declaration of `PreviewConfiguration` to properly resolve imports.
+namespace margelo::nitro::camera { struct PreviewConfiguration; }
+// Forward declaration of `Size` to properly resolve imports.
+namespace margelo::nitro::camera { struct Size; }
 // Forward declaration of `MediaType` to properly resolve imports.
 namespace margelo::nitro::camera { enum class MediaType; }
 // Forward declaration of `CameraOrientation` to properly resolve imports.
 namespace margelo::nitro::camera { enum class CameraOrientation; }
-// Forward declaration of `Size` to properly resolve imports.
-namespace margelo::nitro::camera { struct Size; }
 
+#include "PreviewConfiguration.hpp"
+#include <optional>
+#include "JPreviewConfiguration.hpp"
+#include "Size.hpp"
+#include "JSize.hpp"
 #include "MediaType.hpp"
 #include "JMediaType.hpp"
 #include "CameraOrientation.hpp"
 #include "JCameraOrientation.hpp"
-#include <optional>
-#include "Size.hpp"
-#include "JSize.hpp"
 
 namespace margelo::nitro::camera {
 
@@ -52,6 +56,11 @@ namespace margelo::nitro::camera {
   }
 
   // Properties
+  std::optional<PreviewConfiguration> JHybridCameraPreviewOutputSpec::getCurrentConfiguration() {
+    static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JPreviewConfiguration>()>("getCurrentConfiguration");
+    auto __result = method(_javaPart);
+    return __result != nullptr ? std::make_optional(__result->toCpp()) : std::nullopt;
+  }
   MediaType JHybridCameraPreviewOutputSpec::getMediaType() {
     static const auto method = _javaPart->javaClassStatic()->getMethod<jni::local_ref<JMediaType>()>("getMediaType");
     auto __result = method(_javaPart);

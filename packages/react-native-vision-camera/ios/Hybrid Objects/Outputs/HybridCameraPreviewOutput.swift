@@ -12,6 +12,9 @@ final class HybridCameraPreviewOutput: HybridCameraPreviewOutputSpec, NativePrev
   let mediaType: MediaType = .video
   let previewLayer: AVCaptureVideoPreviewLayer
   private let orientationManager = HybridInterfaceOrientationManager()
+  private var formatDescriptionObserver: NSObjectProtocol?
+  private let onConfigurationChanged: ((PreviewConfiguration) -> Void)?
+  private(set) var currentConfiguration: PreviewConfiguration?
   var outputOrientation: CameraOrientation {
     get {
       return previewLayer.connection?.orientation ?? .up
@@ -50,23 +53,27 @@ final class HybridCameraPreviewOutput: HybridCameraPreviewOutputSpec, NativePrev
     return .min(screenSizePx)
   }
 
-  override init() {
+  init(options: PreviewOutputOptions) {
     self.previewLayer = AVCaptureVideoPreviewLayer()
+    self.onConfigurationChanged = options.onConfigurationChanged
     self.previewLayer.videoGravity = .resizeAspectFill
     super.init()
     self.orientationManager.startOrientationUpdates { [weak self] orientation in
       guard let self else { return }
       if let connection = self.previewLayer.connection {
         try? connection.setOrientation(orientation)
+        self.updatePreviewConfiguration(connection, source: "interface orientation changed")
       }
     }
   }
 
   deinit {
+    stopObservingFormatDescription()
     orientationManager.stopOrientationUpdates()
   }
 
   func configure(config: OutputConfiguration) {
+    stopObservingFormatDescription()
     guard let connection = previewLayer.connection else {
       return
     }
@@ -74,5 +81,66 @@ final class HybridCameraPreviewOutput: HybridCameraPreviewOutputSpec, NativePrev
     if let interfaceOrientation = orientationManager.currentOrientation {
       try? connection.setOrientation(interfaceOrientation)
     }
+    observeFormatDescription(on: connection)
+  }
+
+  private func observeFormatDescription(on connection: AVCaptureConnection) {
+    guard let port = connection.inputPorts.first else {
+      logger.warning("[PreviewConfiguration] Cannot observe Preview dimensions: input port is not available.")
+      return
+    }
+
+    formatDescriptionObserver = NotificationCenter.default.addObserver(
+      forName: AVCaptureInput.Port.formatDescriptionDidChangeNotification,
+      object: port,
+      queue: nil
+    ) { [weak self, weak connection] _ in
+      guard let self, let connection else { return }
+      self.updatePreviewConfiguration(connection, source: "format description changed")
+    }
+
+    updatePreviewConfiguration(connection, source: "observer attached")
+  }
+
+  private func stopObservingFormatDescription() {
+    guard let formatDescriptionObserver else { return }
+    NotificationCenter.default.removeObserver(formatDescriptionObserver)
+    self.formatDescriptionObserver = nil
+  }
+
+  private func updatePreviewConfiguration(
+    _ connection: AVCaptureConnection,
+    source: String
+  ) {
+    let activeFormatResolution = connection.inputPorts.first.flatMap { port in
+      (port.input as? AVCaptureDeviceInput).map {
+        Size(dimensions: $0.device.activeFormat.formatDescription.dimensions)
+      }
+    }
+    let resolution = connection.inputStreamResolution ?? activeFormatResolution
+    let rotationDegrees = connection.rotationDegrees
+    guard let resolution else {
+      logger.warning(
+        "[PreviewConfiguration] Cannot determine Preview resolution (\(source))."
+      )
+      return
+    }
+
+    let configuration = PreviewConfiguration(
+      resolution: resolution,
+      rotationDegrees: rotationDegrees)
+    if let currentConfiguration,
+      currentConfiguration.resolution.width == configuration.resolution.width,
+      currentConfiguration.resolution.height == configuration.resolution.height,
+      currentConfiguration.rotationDegrees == configuration.rotationDegrees
+    {
+      return
+    }
+    currentConfiguration = configuration
+
+    logger.info(
+      "[PreviewConfiguration] Preview configuration changed (\(source)): \(resolution.width)x\(resolution.height) @ \(String(describing: rotationDegrees))°"
+    )
+    onConfigurationChanged?(configuration)
   }
 }

@@ -6,6 +6,8 @@ import com.margelo.nitro.camera.CameraOrientation
 import com.margelo.nitro.camera.HybridCameraPreviewOutputSpec
 import com.margelo.nitro.camera.MediaType
 import com.margelo.nitro.camera.MirrorMode
+import com.margelo.nitro.camera.PreviewConfiguration
+import com.margelo.nitro.camera.PreviewOutputOptions
 import com.margelo.nitro.camera.Size
 import com.margelo.nitro.camera.TargetStabilizationMode
 import com.margelo.nitro.camera.extensions.converters.fromMirrorMode
@@ -16,11 +18,15 @@ import com.margelo.nitro.camera.hybrids.orientation.HybridInterfaceOrientationMa
 import com.margelo.nitro.camera.public.NativeCameraOutput
 import com.margelo.nitro.camera.public.NativePreviewOutput
 
-class HybridPreviewOutput :
+class HybridPreviewOutput(
+  private val options: PreviewOutputOptions,
+) :
   HybridCameraPreviewOutputSpec(),
   NativeCameraOutput,
   NativePreviewOutput {
   private val orientationManager = HybridInterfaceOrientationManager()
+  override var currentConfiguration: PreviewConfiguration? = null
+    private set
 
   override val mediaType: MediaType = MediaType.VIDEO
   override var outputOrientation: CameraOrientation
@@ -45,7 +51,7 @@ class HybridPreviewOutput :
     orientationManager.startOrientationUpdates { orientation ->
       preview?.let { preview ->
         preview.targetRotation = orientation.surfaceRotation
-        logPreviewConfiguration(preview, "interface orientation changed")
+        updatePreviewConfiguration(preview, "interface orientation changed")
       }
     }
   }
@@ -97,23 +103,33 @@ class HybridPreviewOutput :
         this.preview?.targetRotation = orientation.surfaceRotation
       }
       this.preview?.surfaceProvider = surfaceProvider
-      logPreviewConfiguration(preview, "use case attached")
+      updatePreviewConfiguration(preview, "use case attached")
     }
   }
 
-  private fun logPreviewConfiguration(
+  private fun updatePreviewConfiguration(
     preview: Preview,
     source: String,
   ) {
     val resolutionInfo = preview.resolutionInfo ?: return
+    val configuration =
+      PreviewConfiguration(
+        resolution = resolutionInfo.resolution.toSize(),
+        rotationDegrees = resolutionInfo.rotationDegrees.toDouble(),
+      )
+    if (configuration == currentConfiguration) return
+    currentConfiguration = configuration
+
     Log.i(
       TAG,
       "Preview configuration changed ($source): ${resolutionInfo.resolution.width}x${resolutionInfo.resolution.height} @ ${resolutionInfo.rotationDegrees}°",
     )
+    options.onConfigurationChanged?.invoke(configuration)
   }
 
   override fun dispose() {
     super.dispose()
     orientationManager.stopOrientationUpdates()
+    currentConfiguration = null
   }
 }
