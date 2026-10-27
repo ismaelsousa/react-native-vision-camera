@@ -5,22 +5,52 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { VisionCamera } from 'react-native-vision-camera'
+import { AdaptiveControlsScreen } from './screens/AdaptiveControlsScreen'
 import { CameraScreen } from './screens/CameraScreen'
+import { HomeScreen } from './screens/HomeScreen'
 import { PermissionsScreen } from './screens/PermissionsScreen'
 import { PhotoScreen } from './screens/PhotoScreen'
+import { PictureInPictureScreen } from './screens/PictureInPictureScreen'
+import { PreviewLabScreen } from './screens/PreviewLabScreen'
+import { UprightPreviewScreen } from './screens/UprightPreviewScreen'
 import { VideoScreen } from './screens/VideoScreen'
 
 const RootStack = createNativeStackNavigator({
   initialRouteName:
     VisionCamera.cameraPermissionStatus === 'authorized'
-      ? 'Camera'
+      ? 'Home'
       : 'Permissions',
   screens: {
     Permissions: PermissionsScreen,
+    Home: HomeScreen,
     Camera: {
       screen: CameraScreen,
       options: {
         orientation: 'portrait_up',
+      },
+    },
+    PreviewLab: {
+      screen: PreviewLabScreen,
+      options: {
+        orientation: 'all',
+      },
+    },
+    AdaptiveControls: {
+      screen: AdaptiveControlsScreen,
+      options: {
+        orientation: 'all',
+      },
+    },
+    PictureInPicture: {
+      screen: PictureInPictureScreen,
+      options: {
+        orientation: 'all',
+      },
+    },
+    UprightPreview: {
+      screen: UprightPreviewScreen,
+      options: {
+        orientation: 'all',
       },
     },
     Photo: {

@@ -14,7 +14,10 @@ export function PermissionsScreen(): React.ReactElement {
 
   useEffect(() => {
     if (cameraPermission.hasPermission) {
-      navigation.navigate('Camera')
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Home' }],
+      })
     }
   }, [cameraPermission.hasPermission, navigation])
 
