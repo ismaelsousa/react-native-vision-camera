@@ -88,13 +88,8 @@ export function AdaptiveControlsScreen(): React.ReactElement {
             width: '100%' as const,
           }
 
-  const controlsBackground =
-    placement === 'inside'
-      ? styles.controlsInsideBackground
-      : styles.controlsOutsideBackground
-
   const topControls = (
-    <View style={[styles.controlBar, styles.topControls, controlsBackground]}>
+    <View style={[styles.controlBar, styles.topControls]}>
       <ControlButton
         icon={showGrid ? 'grid' : 'grid-outline'}
         label="Grid"
@@ -112,9 +107,7 @@ export function AdaptiveControlsScreen(): React.ReactElement {
   )
 
   const bottomControls = (
-    <View
-      style={[styles.controlBar, styles.bottomControls, controlsBackground]}
-    >
+    <View style={[styles.controlBar, styles.bottomControls]}>
       <ControlButton icon="images-outline" label="Library" />
       <Pressable
         accessibilityLabel="Capture"
@@ -286,8 +279,8 @@ export function AdaptiveControlsScreen(): React.ReactElement {
 
           <Text style={styles.comparisonExplanation}>
             {useUprightFrame
-              ? 'The frame follows the upright Preview. Controls stay aligned with the visible image.'
-              : 'The square frame leaves visible bars around the Preview. Compare it with the upright frame.'}
+              ? 'The frame follows the upright Preview, so edge controls line up with the visible image.'
+              : 'The square frame can push edge controls into the bars beside the visible Preview.'}
           </Text>
         </ScrollView>
       </View>
@@ -379,12 +372,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingHorizontal: 16,
   },
-  controlsInsideBackground: {
-    backgroundColor: 'rgba(8, 10, 13, 0.68)',
-  },
-  controlsOutsideBackground: {
-    backgroundColor: colors.surface,
-  },
   topControls: {
     borderRadius: 18,
     minHeight: 52,
@@ -399,13 +386,17 @@ const styles = StyleSheet.create({
   },
   controlButton: {
     alignItems: 'center',
+    backgroundColor: 'rgba(12, 15, 14, 0.82)',
+    borderColor: 'rgba(255, 255, 255, 0.18)',
     borderRadius: 12,
+    borderWidth: 1,
     justifyContent: 'center',
     minHeight: 42,
     minWidth: 48,
   },
   controlButtonSelected: {
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    backgroundColor: colors.primaryWash,
+    borderColor: colors.primary,
   },
   controlLabel: {
     color: colors.text,
@@ -415,8 +406,10 @@ const styles = StyleSheet.create({
   },
   placementBadge: {
     alignItems: 'center',
-    backgroundColor: 'rgba(217, 255, 87, 0.13)',
+    backgroundColor: 'rgba(12, 15, 14, 0.82)',
+    borderColor: colors.primaryBorder,
     borderRadius: 999,
+    borderWidth: 1,
     flexDirection: 'row',
     paddingHorizontal: 10,
     paddingVertical: 6,
@@ -436,6 +429,7 @@ const styles = StyleSheet.create({
   },
   captureButton: {
     alignItems: 'center',
+    backgroundColor: 'rgba(12, 15, 14, 0.82)',
     borderColor: 'white',
     borderRadius: 31,
     borderWidth: 3,
