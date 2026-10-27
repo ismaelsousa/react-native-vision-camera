@@ -18,6 +18,7 @@ import {
 } from 'react-native-vision-camera'
 import { useIsActive } from '../hooks/useIsActive'
 import { useSafeAreaPadding } from '../hooks/useSafeAreaPadding'
+import { previewLabColors as colors } from '../theme/previewLabTheme'
 
 function formatRatio(value: number | undefined): string {
   return value == null ? '—' : value.toFixed(3)
@@ -95,7 +96,7 @@ export function UprightPreviewScreen(): React.ReactElement {
           onPress={() => navigation.goBack()}
           style={styles.backButton}
         >
-          <Ionicons color="white" name="chevron-back" size={24} />
+          <Ionicons color={colors.text} name="chevron-back" size={24} />
         </Pressable>
         <View>
           <Text style={styles.eyebrow}>PREVIEW LAB</Text>
@@ -175,17 +176,17 @@ export function UprightPreviewScreen(): React.ReactElement {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#090b0f',
+    backgroundColor: colors.background,
     flex: 1,
   },
   loadingContainer: {
     alignItems: 'center',
-    backgroundColor: '#090b0f',
+    backgroundColor: colors.background,
     flex: 1,
     justifyContent: 'center',
   },
   loadingText: {
-    color: '#a9adb5',
+    color: colors.textMuted,
     fontSize: 15,
   },
   navigationRow: {
@@ -197,21 +198,21 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: 'center',
-    backgroundColor: '#1a1d23',
+    backgroundColor: colors.surfaceRaised,
     borderRadius: 16,
     height: 42,
     justifyContent: 'center',
     width: 42,
   },
   eyebrow: {
-    color: '#d9ff57',
+    color: colors.primary,
     fontSize: 9,
     fontWeight: '700',
     letterSpacing: 1.6,
     marginBottom: 2,
   },
   title: {
-    color: 'white',
+    color: colors.text,
     fontSize: 21,
     fontWeight: '700',
     letterSpacing: -0.4,
@@ -226,8 +227,8 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   previewFrame: {
-    backgroundColor: '#15181e',
-    borderColor: '#343945',
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
     borderRadius: 24,
     borderWidth: 1,
     overflow: 'hidden',
@@ -243,8 +244,8 @@ const styles = StyleSheet.create({
     top: 0,
   },
   configurationCard: {
-    backgroundColor: '#15181e',
-    borderColor: '#292d35',
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
     borderRadius: 18,
     borderWidth: 1,
     marginTop: 14,
@@ -257,7 +258,7 @@ const styles = StyleSheet.create({
     width: '38%',
   },
   sectionEyebrow: {
-    color: '#777d87',
+    color: colors.textSubtle,
     fontSize: 9,
     fontWeight: '700',
     letterSpacing: 1.1,
@@ -270,24 +271,24 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   metricValue: {
-    color: 'white',
+    color: colors.text,
     fontSize: 15,
     fontVariant: ['tabular-nums'],
     fontWeight: '600',
   },
   highlightValue: {
-    color: '#d9ff57',
+    color: colors.primary,
     fontSize: 15,
     fontVariant: ['tabular-nums'],
     fontWeight: '700',
   },
   metricLabel: {
-    color: '#777d87',
+    color: colors.textSubtle,
     fontSize: 9,
     marginTop: 4,
   },
   divider: {
-    backgroundColor: '#292d35',
+    backgroundColor: colors.border,
     height: StyleSheet.hairlineWidth,
     marginVertical: 13,
   },

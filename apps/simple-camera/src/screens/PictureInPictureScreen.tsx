@@ -19,6 +19,7 @@ import {
 } from 'react-native-vision-camera'
 import { useIsActive } from '../hooks/useIsActive'
 import { useSafeAreaPadding } from '../hooks/useSafeAreaPadding'
+import { previewLabColors as colors } from '../theme/previewLabTheme'
 
 type PipSize = 'small' | 'medium' | 'large'
 type PipDock = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
@@ -142,7 +143,7 @@ export function PictureInPictureScreen(): React.ReactElement {
           onPress={() => navigation.goBack()}
           style={styles.backButton}
         >
-          <Ionicons color="white" name="chevron-back" size={24} />
+          <Ionicons color={colors.text} name="chevron-back" size={24} />
         </Pressable>
         <View style={styles.navigationCopy}>
           <Text style={styles.eyebrow}>PREVIEW LAB</Text>
@@ -162,20 +163,24 @@ export function PictureInPictureScreen(): React.ReactElement {
           style={[styles.callStage, isLandscape && styles.callStageLandscape]}
         >
           <View style={styles.participantAvatar}>
-            <Ionicons color="#737985" name="person" size={58} />
+            <Ionicons color={colors.textSubtle} name="person" size={58} />
           </View>
           <Text style={styles.participantName}>Marc</Text>
           <Text style={styles.callStatus}>Connected · 04:18</Text>
 
           <View style={styles.callActions}>
             <View style={styles.callAction}>
-              <Ionicons color="white" name="mic-outline" size={21} />
+              <Ionicons color={colors.text} name="mic-outline" size={21} />
             </View>
             <View style={[styles.callAction, styles.endCallAction]}>
-              <Ionicons color="white" name="call" size={21} />
+              <Ionicons color={colors.text} name="call" size={21} />
             </View>
             <View style={styles.callAction}>
-              <Ionicons color="white" name="volume-high-outline" size={21} />
+              <Ionicons
+                color={colors.text}
+                name="volume-high-outline"
+                size={21}
+              />
             </View>
           </View>
 
@@ -205,7 +210,7 @@ export function PictureInPictureScreen(): React.ReactElement {
                 }
                 style={styles.flipButton}
               >
-                <Ionicons color="white" name="camera-reverse" size={18} />
+                <Ionicons color={colors.text} name="camera-reverse" size={18} />
               </Pressable>
             </View>
           )}
@@ -287,17 +292,17 @@ export function PictureInPictureScreen(): React.ReactElement {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#090b0f',
+    backgroundColor: colors.background,
     flex: 1,
   },
   loadingContainer: {
     alignItems: 'center',
-    backgroundColor: '#090b0f',
+    backgroundColor: colors.background,
     flex: 1,
     justifyContent: 'center',
   },
   loadingText: {
-    color: '#a9adb5',
+    color: colors.textMuted,
     fontSize: 16,
   },
   navigationRow: {
@@ -308,7 +313,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: 'center',
-    backgroundColor: '#1a1d23',
+    backgroundColor: colors.surfaceRaised,
     borderRadius: 16,
     height: 42,
     justifyContent: 'center',
@@ -319,14 +324,14 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   eyebrow: {
-    color: '#d9ff57',
+    color: colors.primary,
     fontSize: 9,
     fontWeight: '700',
     letterSpacing: 1.6,
     marginBottom: 2,
   },
   title: {
-    color: 'white',
+    color: colors.text,
     fontSize: 21,
     fontWeight: '700',
     letterSpacing: -0.4,
@@ -335,13 +340,13 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   ratioReadoutLabel: {
-    color: '#777d87',
+    color: colors.textSubtle,
     fontSize: 8,
     fontWeight: '700',
     letterSpacing: 1.2,
   },
   ratioReadoutValue: {
-    color: 'white',
+    color: colors.text,
     fontSize: 13,
     fontVariant: ['tabular-nums'],
     fontWeight: '600',
@@ -356,8 +361,8 @@ const styles = StyleSheet.create({
   },
   callStage: {
     alignItems: 'center',
-    backgroundColor: '#161a21',
-    borderColor: '#2c313b',
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
     borderRadius: 26,
     borderWidth: 1,
     flex: 1,
@@ -370,20 +375,20 @@ const styles = StyleSheet.create({
   },
   participantAvatar: {
     alignItems: 'center',
-    backgroundColor: '#252a33',
+    backgroundColor: colors.surfaceRaised,
     borderRadius: 52,
     height: 104,
     justifyContent: 'center',
     width: 104,
   },
   participantName: {
-    color: 'white',
+    color: colors.text,
     fontSize: 20,
     fontWeight: '600',
     marginTop: 15,
   },
   callStatus: {
-    color: '#8f96a2',
+    color: colors.textMuted,
     fontSize: 12,
     marginTop: 5,
   },
@@ -402,11 +407,11 @@ const styles = StyleSheet.create({
     width: 44,
   },
   endCallAction: {
-    backgroundColor: '#e34850',
+    backgroundColor: colors.danger,
   },
   pipFrame: {
-    backgroundColor: '#050608',
-    borderColor: '#d9ff57',
+    backgroundColor: colors.preview,
+    borderColor: colors.primary,
     borderRadius: 18,
     borderWidth: 2,
     overflow: 'hidden',
@@ -428,14 +433,14 @@ const styles = StyleSheet.create({
     top: 8,
   },
   liveDot: {
-    backgroundColor: '#d9ff57',
+    backgroundColor: colors.primary,
     borderRadius: 3,
     height: 6,
     marginRight: 5,
     width: 6,
   },
   pipHeaderText: {
-    color: 'white',
+    color: colors.text,
     fontSize: 8,
     fontWeight: '800',
     letterSpacing: 0.8,
@@ -452,8 +457,8 @@ const styles = StyleSheet.create({
     width: 32,
   },
   controlPanel: {
-    backgroundColor: '#15181e',
-    borderColor: '#292d35',
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
     borderRadius: 18,
     borderWidth: 1,
     flexGrow: 0,
@@ -484,7 +489,7 @@ const styles = StyleSheet.create({
     gap: 7,
   },
   controlTitle: {
-    color: '#8f949d',
+    color: colors.textSubtle,
     fontSize: 9,
     fontWeight: '700',
     letterSpacing: 0.8,
@@ -496,22 +501,22 @@ const styles = StyleSheet.create({
   },
   segmentButton: {
     alignItems: 'center',
-    backgroundColor: '#252931',
+    backgroundColor: colors.surfaceRaised,
     borderRadius: 8,
     height: 30,
     justifyContent: 'center',
     width: 30,
   },
   segmentButtonSelected: {
-    backgroundColor: '#d9ff57',
+    backgroundColor: colors.primary,
   },
   segmentButtonText: {
-    color: '#adb2bb',
+    color: colors.textMuted,
     fontSize: 10,
     fontWeight: '700',
   },
   segmentButtonTextSelected: {
-    color: '#11140b',
+    color: colors.primaryInk,
   },
   dockControl: {
     flexDirection: 'row',
@@ -519,17 +524,17 @@ const styles = StyleSheet.create({
   },
   dockButton: {
     alignItems: 'center',
-    backgroundColor: '#252931',
+    backgroundColor: colors.surfaceRaised,
     borderRadius: 8,
     height: 30,
     justifyContent: 'center',
     width: 30,
   },
   dockButtonSelected: {
-    backgroundColor: '#3a4031',
+    backgroundColor: colors.primaryWash,
   },
   dockDiagram: {
-    borderColor: '#7f8590',
+    borderColor: colors.textSubtle,
     borderRadius: 2,
     borderWidth: 1,
     height: 15,
@@ -537,7 +542,7 @@ const styles = StyleSheet.create({
     width: 18,
   },
   dockDot: {
-    backgroundColor: '#d9ff57',
+    backgroundColor: colors.primary,
     borderRadius: 1,
     height: 5,
     position: 'absolute',
@@ -560,19 +565,19 @@ const styles = StyleSheet.create({
     minWidth: 0,
   },
   nativeValueLabel: {
-    color: '#777d87',
+    color: colors.textSubtle,
     fontSize: 8,
     fontWeight: '700',
     letterSpacing: 1,
   },
   nativeValue: {
-    color: 'white',
+    color: colors.text,
     fontSize: 10,
     fontVariant: ['tabular-nums'],
     marginTop: 4,
   },
   nativeValueHint: {
-    color: '#8f949d',
+    color: colors.textSubtle,
     fontSize: 9,
     marginTop: 3,
   },

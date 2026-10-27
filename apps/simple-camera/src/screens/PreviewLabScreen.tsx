@@ -12,6 +12,7 @@ import {
   View,
 } from 'react-native'
 import { useSafeAreaPadding } from '../hooks/useSafeAreaPadding'
+import { previewLabColors as colors } from '../theme/previewLabTheme'
 
 interface LabCardProps {
   description: string
@@ -40,7 +41,7 @@ function LabCard({
       ]}
     >
       <View style={styles.cardIcon}>
-        <Ionicons color="#d9ff57" name={icon} size={24} />
+        <Ionicons color={colors.primary} name={icon} size={24} />
       </View>
       <View style={styles.cardCopy}>
         <View style={styles.cardTitleRow}>
@@ -52,7 +53,7 @@ function LabCard({
         <Text style={styles.cardDescription}>{description}</Text>
       </View>
       {onPress == null ? null : (
-        <Ionicons color="#8d929b" name="chevron-forward" size={20} />
+        <Ionicons color={colors.textSubtle} name="chevron-forward" size={20} />
       )}
     </Pressable>
   )
@@ -76,7 +77,7 @@ export function PreviewLabScreen(): React.ReactElement {
           onPress={() => navigation.goBack()}
           style={styles.backButton}
         >
-          <Ionicons color="white" name="chevron-back" size={24} />
+          <Ionicons color={colors.text} name="chevron-back" size={24} />
         </Pressable>
         <View>
           <Text style={styles.eyebrow}>SHOWCASES</Text>
@@ -90,33 +91,43 @@ export function PreviewLabScreen(): React.ReactElement {
       </Text>
 
       {supportsPreviewConfiguration ? (
-        <View style={styles.cards}>
-          <LabCard
-            description="See the upright dimensions and aspect ratio update beside the native stream values."
-            icon="resize-outline"
-            onPress={() => navigation.navigate('UprightPreview')}
-            status="01"
-            title="Upright resolution"
-          />
-          <LabCard
-            description="Use the upright ratio to fit the frame and keep camera controls aligned with it."
-            icon="options-outline"
-            onPress={() => navigation.navigate('AdaptiveControls')}
-            status="02"
-            title="Adaptive controls"
-          />
-          <LabCard
-            description="Resize and dock a live Preview while its frame follows the upright ratio."
-            icon="albums-outline"
-            onPress={() => navigation.navigate('PictureInPicture')}
-            status="03"
-            title="Picture-in-picture"
-          />
-        </View>
+        <>
+          <View style={styles.sectionHeading}>
+            <Text style={styles.sectionLabel}>CHOOSE AN EXPERIMENT</Text>
+            <Text style={styles.sectionCount}>03 DEMOS</Text>
+          </View>
+          <View style={styles.cards}>
+            <LabCard
+              description="See the upright dimensions and aspect ratio update beside the native stream values."
+              icon="resize-outline"
+              onPress={() => navigation.navigate('UprightPreview')}
+              status="01"
+              title="Upright resolution"
+            />
+            <LabCard
+              description="Use the upright ratio to fit the frame and keep camera controls aligned with it."
+              icon="options-outline"
+              onPress={() => navigation.navigate('AdaptiveControls')}
+              status="02"
+              title="Adaptive controls"
+            />
+            <LabCard
+              description="Resize and dock a live Preview while its frame follows the upright ratio."
+              icon="albums-outline"
+              onPress={() => navigation.navigate('PictureInPicture')}
+              status="03"
+              title="Picture-in-picture"
+            />
+          </View>
+        </>
       ) : (
         <View style={styles.compatibilityCard}>
           <View style={styles.compatibilityIcon}>
-            <Ionicons color="#d9ff57" name="information-circle" size={28} />
+            <Ionicons
+              color={colors.primary}
+              name="information-circle"
+              size={28}
+            />
           </View>
           <Text style={styles.compatibilityTitle}>iOS 17 required</Text>
           <Text style={styles.compatibilityDescription}>
@@ -131,10 +142,10 @@ export function PreviewLabScreen(): React.ReactElement {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: '#090b0f',
+    backgroundColor: colors.background,
   },
   container: {
-    backgroundColor: '#090b0f',
+    backgroundColor: colors.background,
     flexGrow: 1,
     paddingBottom: 24,
   },
@@ -146,39 +157,57 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: 'center',
-    backgroundColor: '#1a1d23',
+    backgroundColor: colors.surfaceRaised,
     borderRadius: 18,
     height: 44,
     justifyContent: 'center',
     width: 44,
   },
   eyebrow: {
-    color: '#d9ff57',
+    color: colors.primary,
     fontSize: 10,
     fontWeight: '700',
     letterSpacing: 1.8,
     marginBottom: 3,
   },
   title: {
-    color: 'white',
+    color: colors.text,
     fontSize: 28,
     fontWeight: '700',
     letterSpacing: -0.7,
   },
   subtitle: {
-    color: '#9ca1aa',
+    color: colors.textMuted,
     fontSize: 15,
     lineHeight: 22,
-    marginBottom: 24,
+    marginBottom: 28,
     marginTop: 22,
+  },
+  sectionHeading: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 12,
+  },
+  sectionLabel: {
+    color: colors.primary,
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 1.3,
+  },
+  sectionCount: {
+    color: colors.textSubtle,
+    fontSize: 10,
+    fontWeight: '700',
+    letterSpacing: 1.1,
   },
   cards: {
     gap: 12,
   },
   compatibilityCard: {
     alignItems: 'center',
-    backgroundColor: '#15181e',
-    borderColor: '#292d35',
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
     borderRadius: 20,
     borderWidth: 1,
     paddingHorizontal: 24,
@@ -186,7 +215,7 @@ const styles = StyleSheet.create({
   },
   compatibilityIcon: {
     alignItems: 'center',
-    backgroundColor: '#252a20',
+    backgroundColor: colors.primaryWash,
     borderRadius: 18,
     height: 52,
     justifyContent: 'center',
@@ -194,12 +223,12 @@ const styles = StyleSheet.create({
     width: 52,
   },
   compatibilityTitle: {
-    color: 'white',
+    color: colors.text,
     fontSize: 18,
     fontWeight: '700',
   },
   compatibilityDescription: {
-    color: '#9297a1',
+    color: colors.textMuted,
     fontSize: 14,
     lineHeight: 21,
     marginTop: 8,
@@ -208,9 +237,9 @@ const styles = StyleSheet.create({
   },
   card: {
     alignItems: 'center',
-    backgroundColor: '#15181e',
-    borderColor: '#292d35',
-    borderRadius: 18,
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
+    borderRadius: 16,
     borderWidth: 1,
     flexDirection: 'row',
     padding: 16,
@@ -219,12 +248,12 @@ const styles = StyleSheet.create({
     opacity: 0.52,
   },
   cardPressed: {
-    backgroundColor: '#20242b',
+    backgroundColor: colors.surfacePressed,
     transform: [{ scale: 0.99 }],
   },
   cardIcon: {
     alignItems: 'center',
-    backgroundColor: '#252a20',
+    backgroundColor: colors.primaryWash,
     borderRadius: 14,
     height: 46,
     justifyContent: 'center',
@@ -241,18 +270,19 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   cardTitle: {
-    color: 'white',
+    color: colors.text,
     fontSize: 16,
     fontWeight: '600',
   },
   cardStatus: {
-    color: '#d9ff57',
+    color: colors.primary,
     fontSize: 9,
     fontWeight: '800',
     letterSpacing: 1,
+    marginLeft: 'auto',
   },
   cardDescription: {
-    color: '#9297a1',
+    color: colors.textMuted,
     fontSize: 13,
     lineHeight: 18,
   },

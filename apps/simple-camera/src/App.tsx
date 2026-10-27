@@ -3,6 +3,7 @@ import {
   type StaticParamList,
 } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { StatusBar } from 'react-native'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { VisionCamera } from 'react-native-vision-camera'
 import { AdaptiveControlsScreen } from './screens/AdaptiveControlsScreen'
@@ -14,6 +15,7 @@ import { PictureInPictureScreen } from './screens/PictureInPictureScreen'
 import { PreviewLabScreen } from './screens/PreviewLabScreen'
 import { UprightPreviewScreen } from './screens/UprightPreviewScreen'
 import { VideoScreen } from './screens/VideoScreen'
+import { previewLabColors as colors } from './theme/previewLabTheme'
 
 const RootStack = createNativeStackNavigator({
   initialRouteName:
@@ -72,7 +74,7 @@ const RootStack = createNativeStackNavigator({
     navigationBarHidden: true,
     headerShown: false,
     contentStyle: {
-      backgroundColor: 'black',
+      backgroundColor: colors.background,
     },
   },
 })
@@ -90,6 +92,7 @@ const Navigation = createStaticNavigation(RootStack)
 function App() {
   return (
     <GestureHandlerRootView>
+      <StatusBar backgroundColor={colors.background} barStyle="light-content" />
       <Navigation />
     </GestureHandlerRootView>
   )

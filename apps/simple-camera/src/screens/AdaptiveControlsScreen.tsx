@@ -24,6 +24,7 @@ import {
 } from '../components/AspectRatioContentLayout'
 import { useIsActive } from '../hooks/useIsActive'
 import { useSafeAreaPadding } from '../hooks/useSafeAreaPadding'
+import { previewLabColors as colors } from '../theme/previewLabTheme'
 
 interface ControlButtonProps {
   icon: IoniconsIconName
@@ -45,7 +46,7 @@ function ControlButton({
       onPress={onPress}
       style={[styles.controlButton, selected && styles.controlButtonSelected]}
     >
-      <Ionicons color="white" name={icon} size={21} />
+      <Ionicons color={colors.text} name={icon} size={21} />
       <Text style={styles.controlLabel}>{label}</Text>
     </Pressable>
   )
@@ -149,7 +150,7 @@ export function AdaptiveControlsScreen(): React.ReactElement {
           onPress={() => navigation.goBack()}
           style={styles.backButton}
         >
-          <Ionicons color="white" name="chevron-back" size={24} />
+          <Ionicons color={colors.text} name="chevron-back" size={24} />
         </Pressable>
         <View style={styles.navigationCopy}>
           <Text style={styles.eyebrow}>PREVIEW LAB</Text>
@@ -296,17 +297,17 @@ export function AdaptiveControlsScreen(): React.ReactElement {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#090b0f',
+    backgroundColor: colors.background,
     flex: 1,
   },
   loadingContainer: {
     alignItems: 'center',
-    backgroundColor: '#090b0f',
+    backgroundColor: colors.background,
     flex: 1,
     justifyContent: 'center',
   },
   loadingText: {
-    color: '#a9adb5',
+    color: colors.textMuted,
     fontSize: 16,
   },
   navigationRow: {
@@ -317,7 +318,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     alignItems: 'center',
-    backgroundColor: '#1a1d23',
+    backgroundColor: colors.surfaceRaised,
     borderRadius: 16,
     height: 42,
     justifyContent: 'center',
@@ -328,14 +329,14 @@ const styles = StyleSheet.create({
     marginLeft: 12,
   },
   eyebrow: {
-    color: '#d9ff57',
+    color: colors.primary,
     fontSize: 9,
     fontWeight: '700',
     letterSpacing: 1.6,
     marginBottom: 2,
   },
   title: {
-    color: 'white',
+    color: colors.text,
     fontSize: 21,
     fontWeight: '700',
     letterSpacing: -0.4,
@@ -344,13 +345,13 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
   },
   ratioReadoutLabel: {
-    color: '#777d87',
+    color: colors.textSubtle,
     fontSize: 8,
     fontWeight: '700',
     letterSpacing: 1.2,
   },
   ratioReadoutValue: {
-    color: 'white',
+    color: colors.text,
     fontSize: 13,
     fontVariant: ['tabular-nums'],
     fontWeight: '600',
@@ -369,7 +370,7 @@ const styles = StyleSheet.create({
   },
   previewFrame: {
     backgroundColor: '#201316',
-    borderColor: '#d9ff57',
+    borderColor: colors.primary,
     borderRadius: 24,
     borderWidth: 1,
   },
@@ -382,7 +383,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(8, 10, 13, 0.68)',
   },
   controlsOutsideBackground: {
-    backgroundColor: '#12151a',
+    backgroundColor: colors.surface,
   },
   topControls: {
     borderRadius: 18,
@@ -407,7 +408,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.12)',
   },
   controlLabel: {
-    color: '#d5d8de',
+    color: colors.text,
     fontSize: 9,
     fontWeight: '600',
     marginTop: 2,
@@ -421,14 +422,14 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
   },
   liveDot: {
-    backgroundColor: '#d9ff57',
+    backgroundColor: colors.primary,
     borderRadius: 3,
     height: 6,
     marginRight: 6,
     width: 6,
   },
   placementText: {
-    color: '#d9ff57',
+    color: colors.primary,
     fontSize: 9,
     fontWeight: '800',
     letterSpacing: 1,
@@ -458,7 +459,7 @@ const styles = StyleSheet.create({
     top: 0,
   },
   contentGuide: {
-    borderColor: '#d9ff57',
+    borderColor: colors.primary,
     borderWidth: 1,
   },
   contentGuideFill: {
@@ -501,8 +502,8 @@ const styles = StyleSheet.create({
     top: '66.666%',
   },
   configurationPanel: {
-    backgroundColor: '#15181e',
-    borderColor: '#292d35',
+    backgroundColor: colors.surface,
+    borderColor: colors.border,
     borderRadius: 18,
     borderWidth: 1,
     flexGrow: 0,
@@ -526,12 +527,12 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   configurationTitle: {
-    color: 'white',
+    color: colors.text,
     fontSize: 15,
     fontWeight: '600',
   },
   configurationDescription: {
-    color: '#8f949d',
+    color: colors.textSubtle,
     fontSize: 11,
     marginTop: 3,
     maxWidth: 215,
@@ -543,13 +544,13 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
   },
   nativeValueLabel: {
-    color: '#777d87',
+    color: colors.textSubtle,
     fontSize: 8,
     fontWeight: '700',
     letterSpacing: 1.1,
   },
   nativeValue: {
-    color: '#d5d8de',
+    color: colors.text,
     fontSize: 10,
     fontVariant: ['tabular-nums'],
     marginTop: 3,
@@ -560,8 +561,8 @@ const styles = StyleSheet.create({
     marginTop: 13,
   },
   comparisonButton: {
-    backgroundColor: '#22262d',
-    borderColor: '#30353f',
+    backgroundColor: colors.surfaceRaised,
+    borderColor: colors.border,
     borderRadius: 12,
     borderWidth: 1,
     flex: 1,
@@ -570,32 +571,32 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   comparisonButtonSelected: {
-    backgroundColor: '#d9ff57',
-    borderColor: '#d9ff57',
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
   },
   comparisonButtonDisabled: {
     opacity: 0.45,
   },
   comparisonButtonEyebrow: {
-    color: '#838994',
+    color: colors.textSubtle,
     fontSize: 8,
     fontWeight: '800',
     letterSpacing: 1,
     marginBottom: 3,
   },
   comparisonButtonEyebrowSelected: {
-    color: '#56651d',
+    color: colors.primaryBorder,
   },
   comparisonButtonText: {
-    color: '#c0c4cc',
+    color: colors.textMuted,
     fontSize: 11,
     fontWeight: '600',
   },
   comparisonButtonTextSelected: {
-    color: '#11140b',
+    color: colors.primaryInk,
   },
   comparisonExplanation: {
-    color: '#9ba0aa',
+    color: colors.textMuted,
     fontSize: 11,
     lineHeight: 16,
     marginTop: 10,
