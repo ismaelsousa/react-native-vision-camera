@@ -11,7 +11,10 @@ import NitroModules
 final class HybridCameraPreviewOutput: HybridCameraPreviewOutputSpec, NativePreviewViewOutput {
   let mediaType: MediaType = .video
   let previewLayer: AVCaptureVideoPreviewLayer
-  private let orientationManager = HybridInterfaceOrientationManager()
+  private let orientationManager: HybridInterfaceOrientationManager?
+  // Store as NSObject so this output remains available before iOS 17.
+  private var rotationCoordinator: NSObject?
+  private var rotationObserver: NSKeyValueObservation?
   private var formatDescriptionObserver: NSObjectProtocol?
   private let onConfigurationChanged: ((PreviewConfiguration) -> Void)?
   private(set) var currentConfiguration: PreviewConfiguration?
@@ -21,7 +24,7 @@ final class HybridCameraPreviewOutput: HybridCameraPreviewOutputSpec, NativePrev
     }
     set {
       // Setting orientation on a Preview output does nothing,
-      // as its orientation is always driven by the `orientationManager`.
+      // as its orientation is driven by the rotation coordinator or orientation manager.
     }
   }
   var currentResolution: Size? {
@@ -57,8 +60,13 @@ final class HybridCameraPreviewOutput: HybridCameraPreviewOutputSpec, NativePrev
     self.previewLayer = AVCaptureVideoPreviewLayer()
     self.onConfigurationChanged = options.onConfigurationChanged
     self.previewLayer.videoGravity = .resizeAspectFill
+    if #available(iOS 17.0, *) {
+      self.orientationManager = nil
+    } else {
+      self.orientationManager = HybridInterfaceOrientationManager()
+    }
     super.init()
-    self.orientationManager.startOrientationUpdates { [weak self] orientation in
+    self.orientationManager?.startOrientationUpdates { [weak self] orientation in
       guard let self else { return }
       if let connection = self.previewLayer.connection {
         try? connection.setOrientation(orientation)
@@ -69,19 +77,50 @@ final class HybridCameraPreviewOutput: HybridCameraPreviewOutputSpec, NativePrev
 
   deinit {
     stopObservingFormatDescription()
-    orientationManager.stopOrientationUpdates()
+    stopObservingRotation()
+    orientationManager?.stopOrientationUpdates()
   }
 
   func configure(config: OutputConfiguration) {
     stopObservingFormatDescription()
+    if #available(iOS 17.0, *) {
+      configureRotationCoordinator()
+    }
     guard let connection = previewLayer.connection else {
       return
     }
     try? connection.setMirrorMode(config.mirrorMode)
-    if let interfaceOrientation = orientationManager.currentOrientation {
+    if let interfaceOrientation = orientationManager?.currentOrientation {
       try? connection.setOrientation(interfaceOrientation)
     }
     observeFormatDescription(on: connection)
+  }
+
+  @available(iOS 17.0, *)
+  private func configureRotationCoordinator() {
+    stopObservingRotation()
+    guard let connection = previewLayer.connection,
+      let input = connection.inputPorts.first(where: { $0.mediaType == .video })?.input as? AVCaptureDeviceInput
+    else { return }
+
+    let coordinator = AVCaptureDevice.RotationCoordinator(device: input.device, previewLayer: previewLayer)
+    rotationCoordinator = coordinator
+    rotationObserver = coordinator.observe(
+      \.videoRotationAngleForHorizonLevelPreview,
+      options: [.initial, .new]
+    ) { [weak self, weak connection] coordinator, _ in
+      guard let self, let connection, self.previewLayer.connection === connection else { return }
+      let angle = coordinator.videoRotationAngleForHorizonLevelPreview
+      guard connection.isVideoRotationAngleSupported(angle) else { return }
+      connection.videoRotationAngle = angle
+      self.updatePreviewConfiguration(connection, source: "preview rotation changed")
+    }
+  }
+
+  private func stopObservingRotation() {
+    rotationObserver?.invalidate()
+    rotationObserver = nil
+    rotationCoordinator = nil
   }
 
   private func observeFormatDescription(on connection: AVCaptureConnection) {
