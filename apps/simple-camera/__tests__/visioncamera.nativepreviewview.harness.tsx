@@ -20,6 +20,7 @@ import type {
   CameraDevice,
   CameraDeviceFactory,
   Point,
+  PreviewConfiguration,
   PreviewImplementationMode,
   PreviewResizeMode,
   PreviewView,
@@ -76,9 +77,119 @@ describe('VisionCamera - NativePreviewView', () => {
     backDevice = back
   })
 
+  it('reports the preview resolution through configuration changes', async () => {
+    const session = await VisionCamera.createCameraSession(false)
+    const configurationChanged = deferred<PreviewConfiguration>()
+    const previewStarted = deferred()
+    const previewOutput = VisionCamera.createPreviewOutput({
+      onConfigurationChanged: configurationChanged.resolve,
+    })
+    previewOutput.outputOrientation = 'up'
+    const errorSub = session.addOnErrorListener((error) => {
+      configurationChanged.reject(error)
+      previewStarted.reject(error)
+    })
+
+    try {
+      await session.configure([
+        {
+          input: backDevice,
+          outputs: [{ output: previewOutput, mirrorMode: 'auto' }],
+          constraints: [],
+        },
+      ])
+      await render(
+        <NativePreviewView
+          style={StyleSheet.absoluteFill}
+          previewOutput={previewOutput}
+          onPreviewStarted={callback(previewStarted.resolve)}
+        />,
+      )
+      await session.start()
+      await withTimeout(
+        previewStarted.promise,
+        15_000,
+        'NativePreviewView onPreviewStarted',
+      )
+      const configuration = await withTimeout(
+        configurationChanged.promise,
+        10_000,
+        'preview onConfigurationChanged',
+      )
+
+      expect(configuration.resolution.width).toBeGreaterThan(0)
+      expect(configuration.resolution.height).toBeGreaterThan(0)
+      expect(configuration.resolution).toEqual(previewOutput.currentResolution)
+      expect(previewOutput.currentConfiguration?.resolution).toEqual(
+        configuration.resolution,
+      )
+    } finally {
+      errorSub.remove()
+      await session.stop()
+    }
+  })
+
+  it('reports the clockwise rotation needed to display the preview upright', async (context) => {
+    if (
+      Platform.OS === 'ios' &&
+      Number.parseInt(String(Platform.Version), 10) < 17
+    ) {
+      return context.skip('preview rotationDegrees: requires iOS 17 or newer')
+    }
+
+    const session = await VisionCamera.createCameraSession(false)
+    const configurationChanged = deferred<PreviewConfiguration>()
+    const previewStarted = deferred()
+    const previewOutput = VisionCamera.createPreviewOutput({
+      onConfigurationChanged: configurationChanged.resolve,
+    })
+    previewOutput.outputOrientation = 'up'
+    const errorSub = session.addOnErrorListener((error) => {
+      configurationChanged.reject(error)
+      previewStarted.reject(error)
+    })
+
+    try {
+      await session.configure([
+        {
+          input: backDevice,
+          outputs: [{ output: previewOutput, mirrorMode: 'auto' }],
+          constraints: [],
+        },
+      ])
+      await render(
+        <NativePreviewView
+          style={StyleSheet.absoluteFill}
+          previewOutput={previewOutput}
+          onPreviewStarted={callback(previewStarted.resolve)}
+        />,
+      )
+      await session.start()
+      await withTimeout(
+        previewStarted.promise,
+        15_000,
+        'NativePreviewView onPreviewStarted',
+      )
+      const configuration = await withTimeout(
+        configurationChanged.promise,
+        10_000,
+        'preview onConfigurationChanged',
+      )
+
+      expect([0, 90, 180, 270]).toContain(configuration.rotationDegrees)
+      expect(configuration.rotationDegrees).toBe(previewOutput.rotationDegrees)
+      expect(previewOutput.currentConfiguration?.rotationDegrees).toBe(
+        configuration.rotationDegrees,
+      )
+    } finally {
+      errorSub.remove()
+      await session.stop()
+    }
+  })
+
   it('starts a bare NativePreviewView and exposes ref methods', async () => {
     const session = await VisionCamera.createCameraSession(false)
-    const previewOutput = VisionCamera.createPreviewOutput()
+    const previewOutput = VisionCamera.createPreviewOutput({})
     await session.configure([
       {
         input: backDevice,
@@ -142,7 +253,7 @@ describe('VisionCamera - NativePreviewView', () => {
     }
 
     const session = await VisionCamera.createCameraSession(false)
-    const previewOutput = VisionCamera.createPreviewOutput()
+    const previewOutput = VisionCamera.createPreviewOutput({})
     await session.configure([
       {
         input: backDevice,
@@ -217,7 +328,7 @@ describe('VisionCamera - NativePreviewView', () => {
 
   it('keeps a positioned NativePreviewView at its React layout after preview starts', async () => {
     const session = await VisionCamera.createCameraSession(false)
-    const previewOutput = VisionCamera.createPreviewOutput()
+    const previewOutput = VisionCamera.createPreviewOutput({})
     await session.configure([
       {
         input: backDevice,
@@ -330,7 +441,7 @@ describe('VisionCamera - NativePreviewView', () => {
 
   it('keeps a flex preview laid out inside a padded overflow-hidden parent', async () => {
     const session = await VisionCamera.createCameraSession(false)
-    const previewOutput = VisionCamera.createPreviewOutput()
+    const previewOutput = VisionCamera.createPreviewOutput({})
     await session.configure([
       {
         input: backDevice,
@@ -396,7 +507,7 @@ describe('VisionCamera - NativePreviewView', () => {
   it('survives repeated conditional placeholder-to-preview mounts in a padded parent', async () => {
     for (let attempt = 1; attempt <= 5; attempt++) {
       const session = await VisionCamera.createCameraSession(false)
-      const previewOutput = VisionCamera.createPreviewOutput()
+      const previewOutput = VisionCamera.createPreviewOutput({})
       await session.configure([
         {
           input: backDevice,
@@ -470,7 +581,7 @@ describe('VisionCamera - NativePreviewView', () => {
 
   it('keeps a fixed 150x300 preview centered on first mount', async () => {
     const session = await VisionCamera.createCameraSession(false)
-    const previewOutput = VisionCamera.createPreviewOutput()
+    const previewOutput = VisionCamera.createPreviewOutput({})
     await session.configure([
       {
         input: backDevice,
@@ -568,7 +679,7 @@ describe('VisionCamera - NativePreviewView', () => {
 
   it('updates geometry when the preview layout changes while running', async () => {
     const session = await VisionCamera.createCameraSession(false)
-    const previewOutput = VisionCamera.createPreviewOutput()
+    const previewOutput = VisionCamera.createPreviewOutput({})
     await session.configure([
       {
         input: backDevice,
@@ -660,7 +771,7 @@ describe('VisionCamera - NativePreviewView', () => {
   it('starts a new NativePreviewView after the previous one unmounts', async () => {
     for (let attempt = 1; attempt <= 2; attempt++) {
       const session = await VisionCamera.createCameraSession(false)
-      const previewOutput = VisionCamera.createPreviewOutput()
+      const previewOutput = VisionCamera.createPreviewOutput({})
       await session.configure([
         {
           input: backDevice,
@@ -724,8 +835,8 @@ describe('VisionCamera - NativePreviewView', () => {
 
   it('starts a replacement preview and stops the removed preview while running', async () => {
     const session = await VisionCamera.createCameraSession(false)
-    const firstPreviewOutput = VisionCamera.createPreviewOutput()
-    const secondPreviewOutput = VisionCamera.createPreviewOutput()
+    const firstPreviewOutput = VisionCamera.createPreviewOutput({})
+    const secondPreviewOutput = VisionCamera.createPreviewOutput({})
     await session.configure([
       {
         input: backDevice,
@@ -860,8 +971,8 @@ describe('VisionCamera - NativePreviewView', () => {
     if (secondDevice == null) throw new Error('missing second multi-cam device')
 
     const session = await VisionCamera.createCameraSession(true)
-    const firstPreviewOutput = VisionCamera.createPreviewOutput()
-    const secondPreviewOutput = VisionCamera.createPreviewOutput()
+    const firstPreviewOutput = VisionCamera.createPreviewOutput({})
+    const secondPreviewOutput = VisionCamera.createPreviewOutput({})
     const controllers = await session.configure([
       {
         input: firstDevice,
@@ -966,7 +1077,7 @@ describe('VisionCamera - NativePreviewView', () => {
 
   it('attaches native gesture controllers to a NativePreviewView', async () => {
     const session = await VisionCamera.createCameraSession(false)
-    const previewOutput = VisionCamera.createPreviewOutput()
+    const previewOutput = VisionCamera.createPreviewOutput({})
     const [controller] = await session.configure([
       {
         input: backDevice,
@@ -1038,7 +1149,7 @@ describe('VisionCamera - NativePreviewView', () => {
 
     for (const resizeMode of resizeModes) {
       const session = await VisionCamera.createCameraSession(false)
-      const previewOutput = VisionCamera.createPreviewOutput()
+      const previewOutput = VisionCamera.createPreviewOutput({})
       await session.configure([
         {
           input: backDevice,
@@ -1133,7 +1244,7 @@ describe('VisionCamera - NativePreviewView', () => {
 
     for (const implementationMode of implementationModes) {
       const session = await VisionCamera.createCameraSession(false)
-      const previewOutput = VisionCamera.createPreviewOutput()
+      const previewOutput = VisionCamera.createPreviewOutput({})
       await session.configure([
         {
           input: backDevice,
@@ -1198,7 +1309,7 @@ describe('VisionCamera - NativePreviewView', () => {
 
   it('fires preview callbacks when the session starts and stops', async () => {
     const session = await VisionCamera.createCameraSession(false)
-    const previewOutput = VisionCamera.createPreviewOutput()
+    const previewOutput = VisionCamera.createPreviewOutput({})
     await session.configure([
       {
         input: backDevice,
