@@ -14,8 +14,14 @@ import {
   fn,
   it,
   render,
+  waitFor,
 } from 'react-native-harness'
 import { callback } from 'react-native-nitro-modules'
+import {
+  Screen,
+  type ScreenOrientationTypes,
+  ScreenStack,
+} from 'react-native-screens'
 import type {
   CameraDevice,
   CameraDeviceFactory,
@@ -138,14 +144,15 @@ describe('VisionCamera - NativePreviewView', () => {
     }
 
     const session = await VisionCamera.createCameraSession(false)
-    const configurationChanged = deferred<PreviewConfiguration>()
+    const onConfigurationChanged =
+      fn<(configuration: PreviewConfiguration) => void>()
+    const onError = fn<(error: Error) => void>()
     const previewStarted = deferred()
     const previewOutput = VisionCamera.createPreviewOutput({
-      onConfigurationChanged: configurationChanged.resolve,
+      onConfigurationChanged,
     })
-    previewOutput.outputOrientation = 'up'
     const errorSub = session.addOnErrorListener((error) => {
-      configurationChanged.reject(error)
+      onError(error)
       previewStarted.reject(error)
     })
 
@@ -170,20 +177,140 @@ describe('VisionCamera - NativePreviewView', () => {
         15_000,
         'NativePreviewView onPreviewStarted',
       )
-      const configuration = await withTimeout(
-        configurationChanged.promise,
-        10_000,
-        'preview onConfigurationChanged',
-      )
+      await waitFor(
+        () => {
+          expect(onError).not.toHaveBeenCalled()
+          const configuration = onConfigurationChanged.mock.lastCall?.[0]
+          assert.exists(configuration, 'no reported preview configuration')
+          const currentConfiguration = previewOutput.currentConfiguration
+          assert.exists(
+            currentConfiguration,
+            'no current preview configuration',
+          )
+          const rotationDegrees = previewOutput.rotationDegrees
 
-      expect([0, 90, 180, 270]).toContain(configuration.rotationDegrees)
-      expect(configuration.rotationDegrees).toBe(previewOutput.rotationDegrees)
-      expect(previewOutput.currentConfiguration?.rotationDegrees).toBe(
-        configuration.rotationDegrees,
+          expect([0, 90, 180, 270]).toContain(configuration.rotationDegrees)
+          expect(configuration).toEqual(currentConfiguration)
+          expect(configuration.rotationDegrees).toBe(rotationDegrees)
+        },
+        { timeout: 10_000 },
       )
     } finally {
       errorSub.remove()
       await session.stop()
+    }
+  })
+
+  it('reports a new preview configuration when the interface rotates', async (context) => {
+    if (
+      Platform.OS === 'ios' &&
+      Number.parseInt(String(Platform.Version), 10) < 17
+    ) {
+      return context.skip('preview rotationDegrees: requires iOS 17 or newer')
+    }
+
+    const session = await VisionCamera.createCameraSession(false)
+    const onConfigurationChanged =
+      fn<(configuration: PreviewConfiguration) => void>()
+    const onError = fn<(error: Error) => void>()
+    const previewStarted = deferred()
+    const previewOutput = VisionCamera.createPreviewOutput({
+      onConfigurationChanged,
+    })
+    const errorSub = session.addOnErrorListener(onError)
+
+    function TestPreview({
+      orientation,
+    }: {
+      orientation: ScreenOrientationTypes
+    }) {
+      return (
+        <ScreenStack style={StyleSheet.absoluteFill}>
+          <Screen
+            enabled={true}
+            activityState={2}
+            screenOrientation={orientation}
+            style={StyleSheet.absoluteFill}
+          >
+            <NativePreviewView
+              style={StyleSheet.absoluteFill}
+              previewOutput={previewOutput}
+              onPreviewStarted={callback(previewStarted.resolve)}
+            />
+          </Screen>
+        </ScreenStack>
+      )
+    }
+
+    const { rerender } = await render(<TestPreview orientation="portrait_up" />)
+    try {
+      await session.configure([
+        {
+          input: backDevice,
+          outputs: [{ output: previewOutput, mirrorMode: 'auto' }],
+          constraints: [],
+        },
+      ])
+      await session.start()
+      await withTimeout(
+        previewStarted.promise,
+        15_000,
+        'preview started before rotation',
+      )
+      await waitFor(
+        () => {
+          expect(onError).not.toHaveBeenCalled()
+          expect(onConfigurationChanged).toHaveBeenCalled()
+          expect(
+            previewOutput.currentConfiguration?.rotationDegrees,
+          ).toBeDefined()
+        },
+        { timeout: 10_000 },
+      )
+      const portraitConfiguration = previewOutput.currentConfiguration
+      assert.exists(portraitConfiguration, 'no portrait preview configuration')
+      const portraitRotation = portraitConfiguration.rotationDegrees
+      assert.exists(portraitRotation, 'no portrait preview rotation')
+
+      const expectedRotations = [0, 90, 180, 270]
+      expect(expectedRotations).toContain(portraitRotation)
+      const orientations: ScreenOrientationTypes[] = [
+        'landscape_left',
+        'portrait_down',
+        'landscape_right',
+        'portrait_up',
+      ]
+
+      for (const orientation of orientations) {
+        onConfigurationChanged.mockClear()
+        await rerender(<TestPreview orientation={orientation} />)
+        await waitFor(
+          () => {
+            expect(onError).not.toHaveBeenCalled()
+            expect(onConfigurationChanged).toHaveBeenCalled()
+            const configuration = onConfigurationChanged.mock.lastCall?.[0]
+            assert.exists(
+              configuration,
+              `no preview configuration for ${orientation}`,
+            )
+            expect(expectedRotations).toContain(configuration.rotationDegrees)
+            expect(configuration.resolution.width).toBeGreaterThan(0)
+            expect(configuration.resolution.height).toBeGreaterThan(0)
+            expect(previewOutput.currentConfiguration).toEqual(configuration)
+            expect(previewOutput.rotationDegrees).toBe(
+              configuration.rotationDegrees,
+            )
+          },
+          { timeout: 10_000 },
+        )
+      }
+    } finally {
+      try {
+        await rerender(<TestPreview orientation="portrait_up" />)
+      } finally {
+        errorSub.remove()
+        await session.stop()
+      }
     }
   })
 
