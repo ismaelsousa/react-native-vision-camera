@@ -90,7 +90,6 @@ describe('VisionCamera - NativePreviewView', () => {
     const previewOutput = VisionCamera.createPreviewOutput({
       onConfigurationChanged: configurationChanged.resolve,
     })
-    previewOutput.outputOrientation = 'up'
     const errorSub = session.addOnErrorListener((error) => {
       configurationChanged.reject(error)
       previewStarted.reject(error)
