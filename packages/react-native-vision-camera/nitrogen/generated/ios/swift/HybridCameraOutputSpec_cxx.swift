@@ -151,7 +151,7 @@ open class HybridCameraOutputSpec_cxx {
       }()
     }
   }
-
+  
   public final var currentResolution: bridge.std__optional_Size_ {
     @inline(__always)
     get {
